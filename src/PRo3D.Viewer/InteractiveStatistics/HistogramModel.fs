@@ -1,0 +1,129 @@
+﻿namespace PRo3D.Viewer.InteractiveStatistics
+
+open System
+open Aardvark.Base
+open Aardvark.UI.Primitives
+open FSharp.Data.Adaptive
+open Adaptify
+
+
+[<ModelType>]
+type HistogramModel = 
+    {   
+        [<NonAdaptive>]
+        id          : Guid    
+        data        : List<Guid*float>
+        maxBinValue : int
+        numOfBins   : NumericInput
+        domainStart : NumericInput
+        domainEnd   : NumericInput
+        bins        : List<BinModel> 
+        hoveredBin  : Option<int>
+        peekItem    : Option<int*float>
+    }
+
+type HistogramModelAction =    
+    | UpdateData of List<Guid*float>    //Guid of elements will be stored in the bins to allow reconstruction
+    | SetBinNumber of Numeric.Action    //the user can manually adapt the bin number and domain range
+    | SetDomainMin of Numeric.Action
+    | SetDomainMax of Numeric.Action   
+    | EnterBin of int                
+    | ExitBin
+    | PeekBinStart of float
+    | PeekBinEnd
+
+module HistogramModel =
+
+    ///numeric input field to set the histogram domain range
+    let domainNumeric (value:float) = 
+        {
+            value   = value
+            min     = 0.01
+            max     = 1000.0 
+            step    = 1.00
+            format  = "{0:0.00}"
+        }
+    
+    ///numeric input field to set the number of bins of the histogram
+    let binNumeric =
+        {
+            value   = 5.00
+            min     = 5.00
+            max     = 30.00
+            step    = 1.00
+            format  = "{0:0.00}"
+        }
+
+    let createHistogramBins (count:int) (min:float) (width:float) =
+        [
+            for i in 0..(count-1) do
+                let start = min + (float(i) * width)
+                let en = start + width                
+                {                    
+                    id              = i
+                    count           = 0
+                    range           = Range1d(start,en)
+                    annotationIDs   = List.empty
+                }
+        ]
+    
+    ///compute into which bin the data value would fall into
+    let peekBinAffiliation (value:float) (domain:Range1d) (n:float) =
+        if value < domain.Min then 0
+        elif value > domain.Max then (int(n)-1)
+        else
+            let binWidth = domain.Size / n
+            let shifted = value - domain.Min                 
+            int(shifted/binWidth)
+
+    //the data is sorted into bins together with a list of ids of the elements that were responsible for an increase of the bin counter
+    //with this we can, if needed, reconstruct the elements from this ids at a later point
+    let sortHistogramDataIntoBins (bins:List<BinModel>) (data:List<Guid*float>) (domain:Range1d) (width:float) = 
+
+        let grouping = 
+            data 
+            |> List.groupBy (fun (_,value) -> 
+                let shifted = value - domain.Min                 
+                int(shifted/width)
+            )
+            |> List.map(fun (binID, innerList) -> 
+                let counter = innerList|> List.length
+                let annotationIds = innerList |> List.map(fun (id,_) -> id)
+                (binID, (counter, annotationIds))
+            )
+            |> Map.ofList //review: this looks quite smart though
+
+        bins 
+        |> List.mapi (fun i bin -> 
+            match (grouping.TryFind i) with
+            | Some (count,ids) -> { bin with count = count; annotationIDs = ids}
+            | None -> {bin with count = 0}
+        )
+    
+    let setHistogramBins (data:List<Guid*float>) (domain:Range1d) (n:int) = 
+
+        let binWidth = domain.Size / float(n)           
+        let createBins = createHistogramBins n domain.Min binWidth
+        sortHistogramDataIntoBins createBins data domain binWidth
+    
+    let initHistogram (domain:Range1d) (data:List<Guid*float>) =
+        
+        let domainStart = floor(domain.Min) 
+        let domainEnd = ceil(domain.Max)    
+        let roundedDomain = Range1d(domainStart,domainEnd)           
+        let bins = setHistogramBins data roundedDomain (int(binNumeric.value))
+        {
+            id          = Guid.NewGuid()       
+            numOfBins   = binNumeric 
+            maxBinValue = BinModel.getBinMaxValue bins
+            domainStart = domainNumeric domainStart
+            domainEnd   = domainNumeric domainEnd
+            data        = data
+            bins        = bins 
+            hoveredBin  = None
+            peekItem    = None
+        }
+
+
+
+

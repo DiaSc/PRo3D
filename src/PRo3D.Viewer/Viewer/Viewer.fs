@@ -51,6 +51,7 @@ open Aether.Operators
 open Chiron 
 open PRo3D.Core.Surface
 open Aardvark.UI.Animation.Deprecated
+open PRo3D.Viewer.InteractiveStatistics
 
 type UserFeedback<'a> = {
     id      : string
@@ -1770,6 +1771,9 @@ module ViewerApp =
                     m.animations
             (Optic.set _gisApp gisApp m)
             |> Optic.set ViewerLenses._animation animations
+        | InteractiveStatsMessage msg,_,_ ->
+            let interactiveModel =  InteractiveStatisticsApp.update m.interactiveStats msg
+            { m with interactiveStats = interactiveModel}
         | unknownAction, _, _ -> 
             Log.line "[Viewer] Message not handled: %s" (string unknownAction)
             m       

@@ -37,6 +37,25 @@
     <EmbeddedResource Remove="Drawing\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InteractiveStatistics\BinModel.fs" />
+    <Compile Include="InteractiveStatistics\BinModel.g.fs" />
+    <Compile Include="InteractiveStatistics\RoseDiagramModel.fs" />
+    <Compile Include="InteractiveStatistics\RoseDiagramModel.g.fs" />
+    <Compile Include="InteractiveStatistics\RoseDiagramApp.fs" />
+    <Compile Include="InteractiveStatistics\RoseDiagramUI.fs" />
+    <Compile Include="InteractiveStatistics\HistogramModel.fs" />
+    <Compile Include="InteractiveStatistics\HistogramModel.g.fs" />
+    <Compile Include="InteractiveStatistics\HistogramApp.fs" />
+    <Compile Include="InteractiveStatistics\HistogramUI.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsVisualizationModel.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsVisualizationModel.g.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsVisualizationApp.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsMeasurementModel.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsMeasurementModel.g.fs" />
+    <Compile Include="InteractiveStatistics\StatisticsMeasurementApp.fs" />
+    <Compile Include="InteractiveStatistics\InteractiveStatisticsModel.fs" />
+    <Compile Include="InteractiveStatistics\InteractiveStatisticsModel.g.fs" />
+    <Compile Include="InteractiveStatistics\InteractiveStatisticsApp.fs" />
     <None Include="RunAdaptify.fsx" />
     <None Include="paket.references" />
     <Compile Include="Config.fs" />

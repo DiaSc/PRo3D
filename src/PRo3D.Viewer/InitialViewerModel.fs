@@ -114,6 +114,7 @@ module Viewer =
 
             startupArgs     = startupArgs            
             drawing         = Drawing.DrawingModel.initialdrawing
+            interactiveStats = PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel.initial
             properties      = NoProperties
             interaction     = Interactions.DrawAnnotation
             multiSelectBox  = None

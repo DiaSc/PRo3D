@@ -26,6 +26,7 @@ open PRo3D.SimulatedViews
 open Adaptify
 open FSharp.Data.Adaptive
 open PRo3D.Core.Gis
+open PRo3D.Viewer.InteractiveStatistics
 
 module Gui =            
     
@@ -1174,6 +1175,10 @@ module Gui =
             | Some "annotations" -> 
                 require (viewerDependencies) (body bodyAttributes [Annotations.annotationUI m
                                                                         |> UI.map ViewerMessage])
+            
+            | Some "interactiveStats" ->
+                require (viewerDependencies) (body bodyAttributes [AnnotationStatisticsDrawings.view m.interactiveStats |> UI.map InteractiveStatsMessage |> UI.map ViewerMessage])
+
             | Some "validation" -> 
                 require (viewerDependencies) (body bodyAttributes [HeightValidatorApp.viewUI m.heighValidation 
                                                                             |> UI.map HeightValidation

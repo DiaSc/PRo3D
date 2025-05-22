@@ -186,6 +186,7 @@ type ViewerAction =
 | GisAppMessage                  of Gis.GisAppAction
 | SBookmarksToPoseDefinition
 | Nop
+| InteractiveStatsMessage        of PRo3D.Viewer.InteractiveStatistics.AnnoStatsAction
 
 and MailboxState = {
   events  : list<MailboxAction>
@@ -539,6 +540,7 @@ type Model = {
     dashboardMode        : string
     scene                : Scene
     drawing              : PRo3D.Core.Drawing.DrawingModel
+    interactiveStats     : PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel
     interaction          : Interactions    
     recent               : Recent
     waypoints            : IndexList<WayPoint>
