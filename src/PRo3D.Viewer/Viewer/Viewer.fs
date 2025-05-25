@@ -563,7 +563,22 @@ module ViewerApp =
                 let drawing = 
                     DrawingApp.update m.scene.referenceSystem drawingConfig None sendQueue view m.shiftFlag m.drawing msg
 
-                { m with drawing = drawing; } |> stash
+                let interactiveStatistics = 
+                    match msg with
+                    | Drawing.GroupsMessage g -> 
+                        match g with
+                        | GroupsAppAction.SingleSelectLeaf (_,id,_) | GroupsAppAction.AddLeafToSelection (_,id,_) -> 
+                            InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id, drawing.annotations))
+                        | GroupsAppAction.SetSelection (_,_) -> 
+                            InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateMultipleSelectedAnnotations drawing.annotations)
+                        | _ -> m.interactiveStats
+                    | Drawing.PickDirectly id | Drawing.PickAnnotation (_,id) -> 
+                        InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id,drawing.annotations))
+                    | _ -> m.interactiveStats
+
+                {m with drawing = drawing; interactiveStats = interactiveStatistics} |> stash
+
+                //{ m with drawing = drawing; } |> stash
         | SurfaceActions msg,_,_ ->
             
             let view = m.navigation.camera.view

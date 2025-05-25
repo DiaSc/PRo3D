@@ -159,13 +159,12 @@ module RoseDiagramUI =
    
     let binAngleDropDown' (r:AdaptiveRoseDiagramModel) = 
         
-        let angles = [|1.0; 15.0; 45.0; 90.0|] 
-        let values = AMap.ofArray((angles |> Array.map (fun v -> (v, text (sprintf "%.0f°" v)))))
-        
-        //TODO replace this with dropdown
-        Html.table[
-            Html.row "Bin width" []                
-        ]
+        let angles = [|1.0; 15.0; 45.0; 90.0|]               
+        let values = AList.ofArray(angles)                
+        Html.table [ Html.row "Bin width" [ Html.SemUi.dropDown' values r.binAngle SetBinAngle (fun x -> sprintf "%.0f°" x) ] ]
+
+       
+       
         
 
 
