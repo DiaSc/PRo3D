@@ -1,5 +1,5 @@
-//cf33c77d-fa65-1e39-3251-d4800ccc688d
-//cc6402bb-34b7-6c1e-dc39-276db6ebfbbe
+//66ceb84d-f58a-fb50-e119-92dfc2bf55b2
+//51c08217-f1ff-2293-777a-5ff957462b89
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -156,6 +156,14 @@ type AdaptiveGroupsModel(value : GroupsModel) =
     let _lastSelectedItem_ = FSharp.Data.Adaptive.cval(value.lastSelectedItem)
     let _selectedLeaves_ = FSharp.Data.Adaptive.cset(value.selectedLeaves)
     let _singleSelectLeaf_ = FSharp.Data.Adaptive.cval(value.singleSelectLeaf)
+    let _aggregateGroup_ =
+        let inline __arg2 (o : System.Object) (v : Node) =
+            (unbox<AdaptiveNode> o).Update(v)
+            o
+        let inline __arg5 (o : System.Object) (v : Node) =
+            (unbox<AdaptiveNode> o).Update(v)
+            o
+        Adaptify.FSharp.Core.AdaptiveOption<PRo3D.Core.Node, PRo3D.Core.AdaptiveNode, PRo3D.Core.AdaptiveNode>(value.aggregateGroup, (fun (v : Node) -> AdaptiveNode(v) :> System.Object), __arg2, (fun (o : System.Object) -> unbox<AdaptiveNode> o), (fun (v : Node) -> AdaptiveNode(v) :> System.Object), __arg5, (fun (o : System.Object) -> unbox<AdaptiveNode> o))
     let mutable __value = value
     let __adaptive = FSharp.Data.Adaptive.AVal.custom((fun (token : FSharp.Data.Adaptive.AdaptiveToken) -> __value))
     static member Create(value : GroupsModel) = AdaptiveGroupsModel(value)
@@ -173,6 +181,7 @@ type AdaptiveGroupsModel(value : GroupsModel) =
             _lastSelectedItem_.Value <- value.lastSelectedItem
             _selectedLeaves_.Value <- value.selectedLeaves
             _singleSelectLeaf_.Value <- value.singleSelectLeaf
+            _aggregateGroup_.Update(value.aggregateGroup)
     member __.Current = __adaptive
     member __.version = _version_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.int>
     member __.rootGroup = _rootGroup_
@@ -183,6 +192,7 @@ type AdaptiveGroupsModel(value : GroupsModel) =
     member __.lastSelectedItem = _lastSelectedItem_ :> FSharp.Data.Adaptive.aval<SelectedItem>
     member __.selectedLeaves = _selectedLeaves_ :> FSharp.Data.Adaptive.aset<TreeSelection>
     member __.singleSelectLeaf = _singleSelectLeaf_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.option<System.Guid>>
+    member __.aggregateGroup = _aggregateGroup_ :> FSharp.Data.Adaptive.aval<Adaptify.FSharp.Core.AdaptiveOptionCase<Node, AdaptiveNode, AdaptiveNode>>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module GroupsModelLenses = 
     type GroupsModel with
@@ -195,6 +205,7 @@ module GroupsModelLenses =
         static member lastSelectedItem_ = ((fun (self : GroupsModel) -> self.lastSelectedItem), (fun (value : SelectedItem) (self : GroupsModel) -> { self with lastSelectedItem = value }))
         static member selectedLeaves_ = ((fun (self : GroupsModel) -> self.selectedLeaves), (fun (value : FSharp.Data.Adaptive.HashSet<TreeSelection>) (self : GroupsModel) -> { self with selectedLeaves = value }))
         static member singleSelectLeaf_ = ((fun (self : GroupsModel) -> self.singleSelectLeaf), (fun (value : Microsoft.FSharp.Core.option<System.Guid>) (self : GroupsModel) -> { self with singleSelectLeaf = value }))
+        static member aggregateGroup_ = ((fun (self : GroupsModel) -> self.aggregateGroup), (fun (value : Microsoft.FSharp.Core.option<Node>) (self : GroupsModel) -> { self with aggregateGroup = value }))
 [<System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 type AdaptiveAnnotationGroupsImporterModel(value : AnnotationGroupsImporterModel) =
     let _rootGroupI_ =

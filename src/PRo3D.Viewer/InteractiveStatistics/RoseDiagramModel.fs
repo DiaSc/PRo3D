@@ -97,18 +97,19 @@ module RoseDiagramModel =
         let angDeg = averageAngleRadians.DegreesFromRadians()
         (angDeg + 360.0) % 360.0
   
-    let initRoseDiagram (data:List<Guid*float>) (avg:float)=
+    let initRoseDiagram (data:List<Guid*float>) =
         let binAngle = 15.0
         let initB =  initRoseDiagramBins binAngle
         let bins = sortRoseDiagramDataIntoBins initB data binAngle
         let max = BinModel.getBinMaxValue bins        
-        let center = V2d.Zero               
+        let center = V2d.Zero
+        let average = calculateAvgAngle (data |> List.map (fun (_,value) -> value))
 
         {
             id          = Guid.NewGuid() 
             data        = data
             maxBinValue = max
-            avgAngle    = avg
+            avgAngle    = average
             bins        = bins
             center      = center
             innerRad    = 5.0

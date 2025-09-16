@@ -1177,7 +1177,8 @@ module Gui =
                                                                         |> UI.map ViewerMessage])
             
             | Some "interactiveStats" ->
-                require (viewerDependencies) (body bodyAttributes [AnnotationStatisticsDrawings.view m.interactiveStats |> UI.map InteractiveStatsMessage |> UI.map ViewerMessage])
+                //require (viewerDependencies) (body bodyAttributes [AnnotationStatisticsDrawings.view m.interactiveStats |> UI.map InteractiveStatsMessage |> UI.map ViewerMessage])
+                require (viewerDependencies) (body bodyAttributes [OutcropApp.view m.outcropStats |> UI.map OutcropStatsMessage |> UI.map ViewerMessage])
 
             | Some "validation" -> 
                 require (viewerDependencies) (body bodyAttributes [HeightValidatorApp.viewUI m.heighValidation 

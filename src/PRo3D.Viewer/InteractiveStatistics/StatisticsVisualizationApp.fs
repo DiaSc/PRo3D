@@ -38,6 +38,29 @@ module StatisticsVisualization_App =
             ]|> AttributeMap.ofList
 
         Incremental.div attrSVG v
+
+    //Note: if this version works, remove drawVisualization
+    let drawVisualization2 (p:AdaptiveStatisticsVisualizationModelCase) (dimensions:V2i)=
+        
+        let v = 
+            alist{ 
+                //let! vis = p
+                match p with
+                | AdaptiveHistogram h ->                     
+                    yield HistogramUI.histogramSettings h |> UI.map HistogramMessage                     
+                    yield HistogramUI.drawHistogram' h dimensions |> UI.map HistogramMessage 
+                | AdaptiveRoseDiagram r ->                    
+                    yield RoseDiagramUI.binAngleDropDown' r|> UI.map RoseDiagramMessage 
+                    yield RoseDiagramUI.drawRoseDiagram r dimensions |> UI.map RoseDiagramMessage 
+                }
+       
+        let attrSVG =
+            [   
+                attribute "width" (sprintf "%i" dimensions.X)
+                attribute "height" (sprintf "%i" dimensions.Y)                                         
+            ]|> AttributeMap.ofList
+
+        Incremental.div attrSVG v
         
 
 

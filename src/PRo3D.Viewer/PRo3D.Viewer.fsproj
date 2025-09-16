@@ -56,6 +56,9 @@
     <Compile Include="InteractiveStatistics\InteractiveStatisticsModel.fs" />
     <Compile Include="InteractiveStatistics\InteractiveStatisticsModel.g.fs" />
     <Compile Include="InteractiveStatistics\InteractiveStatisticsApp.fs" />
+    <Compile Include="InteractiveStatistics\OutcropModel.fs" />
+    <Compile Include="InteractiveStatistics\OutcropModel.g.fs" />
+    <Compile Include="InteractiveStatistics\OutcropApp.fs" />
     <None Include="RunAdaptify.fsx" />
     <None Include="paket.references" />
     <Compile Include="Config.fs" />

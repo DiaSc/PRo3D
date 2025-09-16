@@ -225,6 +225,11 @@ module UI =
 
                 staticClickIcon "bookmark icon"         "Select All"   (GroupsMessage(GroupsAppAction.SetSelection(path,true)))
                 staticClickIcon "bookmark outline icon" "Deselect All" (GroupsMessage(GroupsAppAction.SetSelection(path,false)))
+
+                //Icon for creating a rose diagram (Diana)                
+                staticClickIcon "minus icon" "Create Aggregation" (GroupsMessage(GroupsAppAction.SetAggregationGroup path))
+                //
+
             ]
            
         let itemAttributes =

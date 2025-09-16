@@ -38,6 +38,7 @@ type GroupsAppAction =
     | ClearSelection
     | UpdateCam             of Guid
     | Nop
+    | SetAggregationGroup of path : list<Index> //for RD generation (Diana)
 
 module GroupsApp =
                                         
@@ -541,6 +542,10 @@ module GroupsApp =
                 lastSelectedItem = SelectedItem.Group } 
         | ClearSnapshotsGroup -> 
             clearGroupAtRoot model "snapshots"
+        | SetAggregationGroup path ->
+            let node = 
+                getNode path model.rootGroup              
+            { model with aggregateGroup = Some(node)}
         | _ -> 
             model
 

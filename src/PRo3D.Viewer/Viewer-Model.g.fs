@@ -1,5 +1,5 @@
-//de39e6f3-3a47-7bac-94da-36b4746d7a98
-//a6775af4-8dbf-a312-73e1-6084edd4ebff
+//3b15e3bc-8c1a-0eb6-7e9d-670783b9c33d
+//ba2f2fef-8d76-ebd2-632a-a902084dbe34
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -146,6 +146,7 @@ type AdaptiveModel(value : Model) =
     let _scene_ = AdaptiveScene(value.scene)
     let _drawing_ = PRo3D.Core.Drawing.AdaptiveDrawingModel(value.drawing)
     let _interactiveStats_ = PRo3D.Viewer.InteractiveStatistics.AdaptiveInteractiveStatisticsModel(value.interactiveStats)
+    let _outcropStats_ = PRo3D.Viewer.InteractiveStatistics.AdaptiveOutcropModel(value.outcropStats)
     let _interaction_ = FSharp.Data.Adaptive.cval(value.interaction)
     let _recent_ = AdaptiveRecent(value.recent)
     let _waypoints_ = FSharp.Data.Adaptive.clist(value.waypoints)
@@ -193,6 +194,7 @@ type AdaptiveModel(value : Model) =
             _scene_.Update(value.scene)
             _drawing_.Update(value.drawing)
             _interactiveStats_.Update(value.interactiveStats)
+            _outcropStats_.Update(value.outcropStats)
             _interaction_.Value <- value.interaction
             _recent_.Update(value.recent)
             _waypoints_.Value <- value.waypoints
@@ -233,6 +235,7 @@ type AdaptiveModel(value : Model) =
     member __.scene = _scene_
     member __.drawing = _drawing_
     member __.interactiveStats = _interactiveStats_
+    member __.outcropStats = _outcropStats_
     member __.interaction = _interaction_ :> FSharp.Data.Adaptive.aval<PRo3D.Core.Interactions>
     member __.recent = _recent_
     member __.waypoints = _waypoints_ :> FSharp.Data.Adaptive.alist<WayPoint>
@@ -276,6 +279,7 @@ module ModelLenses =
         static member scene_ = ((fun (self : Model) -> self.scene), (fun (value : Scene) (self : Model) -> { self with scene = value }))
         static member drawing_ = ((fun (self : Model) -> self.drawing), (fun (value : PRo3D.Core.Drawing.DrawingModel) (self : Model) -> { self with drawing = value }))
         static member interactiveStats_ = ((fun (self : Model) -> self.interactiveStats), (fun (value : PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel) (self : Model) -> { self with interactiveStats = value }))
+        static member outcropStats_ = ((fun (self : Model) -> self.outcropStats), (fun (value : PRo3D.Viewer.InteractiveStatistics.OutcropModel) (self : Model) -> { self with outcropStats = value }))
         static member interaction_ = ((fun (self : Model) -> self.interaction), (fun (value : PRo3D.Core.Interactions) (self : Model) -> { self with interaction = value }))
         static member recent_ = ((fun (self : Model) -> self.recent), (fun (value : Recent) (self : Model) -> { self with recent = value }))
         static member waypoints_ = ((fun (self : Model) -> self.waypoints), (fun (value : FSharp.Data.Adaptive.IndexList<WayPoint>) (self : Model) -> { self with waypoints = value }))

@@ -567,16 +567,23 @@ module ViewerApp =
                     match msg with
                     | Drawing.GroupsMessage g -> 
                         match g with
-                        | GroupsAppAction.SingleSelectLeaf (_,id,_) | GroupsAppAction.AddLeafToSelection (_,id,_) -> 
-                            InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id, drawing.annotations))
-                        | GroupsAppAction.SetSelection (_,_) -> 
-                            InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateMultipleSelectedAnnotations drawing.annotations)
-                        | _ -> m.interactiveStats
-                    | Drawing.PickDirectly id | Drawing.PickAnnotation (_,id) -> 
-                        InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id,drawing.annotations))
-                    | _ -> m.interactiveStats
+                        //| GroupsAppAction.SingleSelectLeaf (_,id,_) | GroupsAppAction.AddLeafToSelection (_,id,_) -> 
+                            //InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id, drawing.annotations))
+                        //| GroupsAppAction.SetSelection (_,_) -> 
+                            //InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateMultipleSelectedAnnotations drawing.annotations)
+                        | GroupsAppAction.SetAggregationGroup p ->        
+                            match drawing.annotations.aggregateGroup with
+                            | Some n -> OutcropApp.update m.outcropStats (OutcropAction.CreateAggregation (n, drawing.annotations))
+                            | None -> m.outcropStats
+                            //match drawing.annotations.aggregateGroup with
+                            //    | Some n -> InteractiveStatisticsApp.update m.interactiveStats (InteractiveStatisticsAction.CreateRDFromGroup (n, drawing.annotations))
+                            //    | None -> m.interactiveStats                            
+                        | _ -> m.outcropStats
+                    //| Drawing.PickDirectly id | Drawing.PickAnnotation (_,id) -> 
+                        //InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id,drawing.annotations))
+                    | _ -> m.outcropStats
 
-                {m with drawing = drawing; interactiveStats = interactiveStatistics} |> stash
+                {m with drawing = drawing; outcropStats = interactiveStatistics} |> stash
 
                 //{ m with drawing = drawing; } |> stash
         | SurfaceActions msg,_,_ ->

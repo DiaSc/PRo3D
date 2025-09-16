@@ -115,6 +115,7 @@ module Viewer =
             startupArgs     = startupArgs            
             drawing         = Drawing.DrawingModel.initialdrawing
             interactiveStats = PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel.initial
+            outcropStats    = PRo3D.Viewer.InteractiveStatistics.OutcropModel.initial
             properties      = NoProperties
             interaction     = Interactions.DrawAnnotation
             multiSelectBox  = None

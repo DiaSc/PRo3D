@@ -186,7 +186,8 @@ type ViewerAction =
 | GisAppMessage                  of Gis.GisAppAction
 | SBookmarksToPoseDefinition
 | Nop
-| InteractiveStatsMessage        of PRo3D.Viewer.InteractiveStatistics.AnnoStatsAction
+| InteractiveStatsMessage        of PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsAction //TODO: delete later
+| OutcropStatsMessage            of PRo3D.Viewer.InteractiveStatistics. OutcropAction //TODO: there should be an outcrop id as well
 
 and MailboxState = {
   events  : list<MailboxAction>
@@ -540,7 +541,8 @@ type Model = {
     dashboardMode        : string
     scene                : Scene
     drawing              : PRo3D.Core.Drawing.DrawingModel
-    interactiveStats     : PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel
+    interactiveStats     : PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsModel //TODO: can be deleted later, outcropStats are the right approach
+    outcropStats         : PRo3D.Viewer.InteractiveStatistics.OutcropModel //TODO: this should be a list, as there can be more than one outcrop
     interaction          : Interactions    
     recent               : Recent
     waypoints            : IndexList<WayPoint>
