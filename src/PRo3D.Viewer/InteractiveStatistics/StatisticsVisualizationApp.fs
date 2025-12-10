@@ -50,7 +50,7 @@ module StatisticsVisualization_App =
                     yield HistogramUI.histogramSettings h |> UI.map HistogramMessage                     
                     yield HistogramUI.drawHistogram' h dimensions |> UI.map HistogramMessage 
                 | AdaptiveRoseDiagram r ->                    
-                    yield RoseDiagramUI.binAngleDropDown' r|> UI.map RoseDiagramMessage 
+                    //yield RoseDiagramUI.binAngleDropDown' r|> UI.map RoseDiagramMessage 
                     yield RoseDiagramUI.drawRoseDiagram r dimensions |> UI.map RoseDiagramMessage 
                 }
        

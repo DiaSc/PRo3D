@@ -65,7 +65,7 @@ module StatisticsMeasurementModel =
         let initialVis = 
             match mType.scale with
             | Scale.Metric -> StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram dataRange data)
-            | Scale.Angular -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
+            | Scale.Angular -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "")
         
         { measurementType = mType
           data = data

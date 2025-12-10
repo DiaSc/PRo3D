@@ -5,6 +5,7 @@ open PRo3D.Base
 open PRo3D.Base.Annotation
 open Aardvark.Base
 open Aardvark.UI
+open Aardvark.UI.Primitives
 open PRo3D.Core
 open FSharp.Data.Adaptive
 //open PRo3D.Viewer.InteractiveStatistics
@@ -180,21 +181,38 @@ module AnnotationStatisticsDrawings =
 
     let view (m:AdaptiveInteractiveStatisticsModel) =
 
-        //TODO: just show all visualisations side by side (horizontally)
-                         
-        let style' = "color: white; font-family:Consolas;" 
+        //TODO: just show all visualisations side by side (horizontally)                     
         
-        let description = m.node.name
+        let RDs = Incremental.div (AttributeMap.empty) 
+                    (m.visualisations |> AList.map (fun vis -> 
+                        div[style "float:left"] [
+                            (StatisticsVisualization_App.drawVisualization2 vis (new V2i(300, 150)) |> UI.map StatisticsVisualizationMessage)
+                        ]
+                        )
+                    )                                
+        let description = AVal.map2 (fun x y -> sprintf "Aggregation for: %A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
+
+        div [style "position: absolute; top: 15px; left: 15px;"] [
+            div [style "color: white; font-family:Consolas; font-size:16;"] [Incremental.text description]
+            RDs
+        ]
+        
+
+        
+            
+                
+
+
+
+                     
+      
+  
+     
 
         //let v = 
         //    div[][StatisticsVisualization_App.drawVisualization m.visualisations. (new V2i(300, 150)) |> UI.map StatisticsVisualizationMessage]
              
-        Incremental.div (AttributeMap.ofList [style style']) (
-
-            m.visualisations |> AList.map (fun vis -> (StatisticsVisualization_App.drawVisualization2 vis (new V2i(300, 150)) |> UI.map StatisticsVisualizationMessage))        
-
-
-        )
+        
         
         
 

@@ -14,10 +14,15 @@ module OutcropApp =
         match act with
         | InteractiveStatisticsMessage msg -> m
 
-        | CreateAggregation (node, groupsmodel) ->            
-            let model = InteractiveStatisticsModel.createModel node groupsmodel.flat
-            let map = m.aggregations.Add (node.key, model)
-            {m with aggregations = map}
+        | CreateAggregation (node, groupsmodel) -> 
+            //check if the aggregation already exists (if a user clicks the aggregation button again)            
+            if m.aggregations.ContainsKey node.key then
+                Log.line "Aggregation for this node already exists."
+                m
+            else
+                let model = InteractiveStatisticsModel.createModel node groupsmodel.flat
+                let map = m.aggregations.Add (node.key, model)
+                {m with aggregations = map}
 
         //| UpdateAggregation (id, act) -> m //TODO
 

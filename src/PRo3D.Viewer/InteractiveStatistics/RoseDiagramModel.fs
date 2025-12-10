@@ -11,6 +11,8 @@ type RoseDiagramModel =
     {      
         [<NonAdaptive>]
         id          : Guid
+        [<NonAdaptive>]
+        value       : string
         data        : List<Guid*float>
         maxBinValue : int
         avgAngle    : float
@@ -97,7 +99,7 @@ module RoseDiagramModel =
         let angDeg = averageAngleRadians.DegreesFromRadians()
         (angDeg + 360.0) % 360.0
   
-    let initRoseDiagram (data:List<Guid*float>) =
+    let initRoseDiagram (data:List<Guid*float>) (value:string)=
         let binAngle = 15.0
         let initB =  initRoseDiagramBins binAngle
         let bins = sortRoseDiagramDataIntoBins initB data binAngle
@@ -107,6 +109,7 @@ module RoseDiagramModel =
 
         {
             id          = Guid.NewGuid() 
+            value       = value
             data        = data
             maxBinValue = max
             avgAngle    = average

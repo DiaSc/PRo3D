@@ -1,5 +1,5 @@
-//2b5bb3a6-6f37-3633-e48e-9f527d13d0de
-//ccdce4a8-36a1-bc2c-36ea-0e3956f6b7f4
+//ccdf8e91-be4b-82b8-5dc3-b0e21f0e1e29
+//4abf8aa3-527c-a7db-c0d6-6ef6303ca623
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -33,6 +33,7 @@ type AdaptiveInteractiveStatisticsModel(value : InteractiveStatisticsModel) =
             _leaves_.Update(value.leaves)
             _visualisations_.Update(value.visualisations)
     member __.Current = __adaptive
+    member __.id = __value.id
     member __.node = _node_
     member __.path = _path_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>>
     member __.leaves = _leaves_ :> FSharp.Data.Adaptive.amap<System.Guid, PRo3D.Base.Annotation.AdaptiveAnnotation>
@@ -40,6 +41,7 @@ type AdaptiveInteractiveStatisticsModel(value : InteractiveStatisticsModel) =
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module InteractiveStatisticsModelLenses = 
     type InteractiveStatisticsModel with
+        static member id_ = ((fun (self : InteractiveStatisticsModel) -> self.id), (fun (value : System.Guid) (self : InteractiveStatisticsModel) -> { self with id = value }))
         static member node_ = ((fun (self : InteractiveStatisticsModel) -> self.node), (fun (value : PRo3D.Core.Node) (self : InteractiveStatisticsModel) -> { self with node = value }))
         static member path_ = ((fun (self : InteractiveStatisticsModel) -> self.path), (fun (value : Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>) (self : InteractiveStatisticsModel) -> { self with path = value }))
         static member leaves_ = ((fun (self : InteractiveStatisticsModel) -> self.leaves), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, PRo3D.Base.Annotation.Annotation>) (self : InteractiveStatisticsModel) -> { self with leaves = value }))

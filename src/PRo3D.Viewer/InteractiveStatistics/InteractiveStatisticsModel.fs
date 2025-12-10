@@ -9,6 +9,8 @@ open PRo3D.Core
 [<ModelType>]
 type InteractiveStatisticsModel =
     {
+        [<NonAdaptive>]
+        id              :   Guid
         node            :   Node
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
@@ -36,6 +38,7 @@ module InteractiveStatisticsModel =
 
      let initial =
         {
+        id = Guid.NewGuid()
         node = initNode
         path = list.Empty
         leaves = HashMap.empty
@@ -83,15 +86,20 @@ module InteractiveStatisticsModel =
 
             //TODO: expand; currently I just try with the dipAzimuth data
         let data = getDnSResults annotations getDipAzimuth
+        let data2 = getDnSResults annotations getStrikeAzimuth
 
             //TODO: expand; currently just one visualization for testing
-        let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
+        let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")
+        let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
 
         let a = annotations |> HashMap.ofList
 
-        let newList = IndexList.Empty |> IndexList.add vis
+        let tempList = IndexList.Empty |> IndexList.add vis
+        let newList = tempList |> IndexList.add vis2
+
 
         {
+            id = node.key
             node = node
             path = list.Empty 
             leaves = a 

@@ -151,8 +151,8 @@ module RoseDiagramUI =
                 let N = bins |> List.fold (fun acc bin -> acc + bin.count) 0
                 
                 yield drawCircle center innerRad
-                yield drawCircle center outerRad
-                yield drawText (V2i(10, 20)) (sprintf "N = %i" N) "12" "start"                
+                yield drawCircle center outerRad                 
+                yield drawText (V2i(30, 10)) (sprintf "value = %s" r.value) "12" "left"               
                 yield averageLine center innerRad outerRad avgAngle "red"
             }
         Incremental.Svg.svg AttributeMap.empty sect
