@@ -1,5 +1,5 @@
-//ccdf8e91-be4b-82b8-5dc3-b0e21f0e1e29
-//4abf8aa3-527c-a7db-c0d6-6ef6303ca623
+//bc59d014-8109-0f28-3620-e03703f3911c
+//0131b012-d344-93e4-bcc1-36caebc5facf
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -19,7 +19,7 @@ type AdaptiveInteractiveStatisticsModel(value : InteractiveStatisticsModel) =
             m.Update(v)
             m
         FSharp.Data.Traceable.ChangeableModelMap(value.leaves, (fun (v : PRo3D.Base.Annotation.Annotation) -> PRo3D.Base.Annotation.AdaptiveAnnotation(v)), __arg2, (fun (m : PRo3D.Base.Annotation.AdaptiveAnnotation) -> m))
-    let _visualisations_ = FSharp.Data.Traceable.ChangeableModelList(value.visualisations, (fun (v : StatisticsVisualizationModel) -> AdaptiveStatisticsVisualizationModel.CreateAdaptiveCase(v)), (fun (m : AdaptiveStatisticsVisualizationModelCase) (v : StatisticsVisualizationModel) -> m.Update(v)), (fun (m : AdaptiveStatisticsVisualizationModelCase) -> m))
+    let _visualisations_ = FSharp.Data.Traceable.ChangeableModelMap(value.visualisations, (fun (v : StatisticsVisualizationModel) -> AdaptiveStatisticsVisualizationModel.CreateAdaptiveCase(v)), (fun (m : AdaptiveStatisticsVisualizationModelCase) (v : StatisticsVisualizationModel) -> m.Update(v)), (fun (m : AdaptiveStatisticsVisualizationModelCase) -> m))
     let mutable __value = value
     let __adaptive = FSharp.Data.Adaptive.AVal.custom((fun (token : FSharp.Data.Adaptive.AdaptiveToken) -> __value))
     static member Create(value : InteractiveStatisticsModel) = AdaptiveInteractiveStatisticsModel(value)
@@ -37,7 +37,7 @@ type AdaptiveInteractiveStatisticsModel(value : InteractiveStatisticsModel) =
     member __.node = _node_
     member __.path = _path_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>>
     member __.leaves = _leaves_ :> FSharp.Data.Adaptive.amap<System.Guid, PRo3D.Base.Annotation.AdaptiveAnnotation>
-    member __.visualisations = _visualisations_ :> FSharp.Data.Adaptive.alist<AdaptiveStatisticsVisualizationModelCase>
+    member __.visualisations = _visualisations_ :> FSharp.Data.Adaptive.amap<System.Guid, AdaptiveStatisticsVisualizationModelCase>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module InteractiveStatisticsModelLenses = 
     type InteractiveStatisticsModel with
@@ -45,5 +45,5 @@ module InteractiveStatisticsModelLenses =
         static member node_ = ((fun (self : InteractiveStatisticsModel) -> self.node), (fun (value : PRo3D.Core.Node) (self : InteractiveStatisticsModel) -> { self with node = value }))
         static member path_ = ((fun (self : InteractiveStatisticsModel) -> self.path), (fun (value : Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>) (self : InteractiveStatisticsModel) -> { self with path = value }))
         static member leaves_ = ((fun (self : InteractiveStatisticsModel) -> self.leaves), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, PRo3D.Base.Annotation.Annotation>) (self : InteractiveStatisticsModel) -> { self with leaves = value }))
-        static member visualisations_ = ((fun (self : InteractiveStatisticsModel) -> self.visualisations), (fun (value : FSharp.Data.Adaptive.IndexList<StatisticsVisualizationModel>) (self : InteractiveStatisticsModel) -> { self with visualisations = value }))
+        static member visualisations_ = ((fun (self : InteractiveStatisticsModel) -> self.visualisations), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, StatisticsVisualizationModel>) (self : InteractiveStatisticsModel) -> { self with visualisations = value }))
 

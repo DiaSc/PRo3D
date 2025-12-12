@@ -1,5 +1,5 @@
-//f6622af5-10a0-c224-2ed1-c90e98067c1a
-//e943559e-87b8-a030-ec0e-c4b0cd7fe6fc
+//2ee6bd91-3b7e-597b-d052-2770de65ce4d
+//5122872c-3b1a-839a-d6c6-d29305547d9e
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -17,6 +17,7 @@ type AdaptiveOutcropModel(value : OutcropModel) =
             m.Update(v)
             m
         FSharp.Data.Traceable.ChangeableModelMap(value.aggregations, (fun (v : InteractiveStatisticsModel) -> AdaptiveInteractiveStatisticsModel(v)), __arg2, (fun (m : AdaptiveInteractiveStatisticsModel) -> m))
+    let _activeAggregation_ = FSharp.Data.Adaptive.cval(value.activeAggregation)
     let mutable __value = value
     let __adaptive = FSharp.Data.Adaptive.AVal.custom((fun (token : FSharp.Data.Adaptive.AdaptiveToken) -> __value))
     static member Create(value : OutcropModel) = AdaptiveOutcropModel(value)
@@ -26,10 +27,13 @@ type AdaptiveOutcropModel(value : OutcropModel) =
             __value <- value
             __adaptive.MarkOutdated()
             _aggregations_.Update(value.aggregations)
+            _activeAggregation_.Value <- value.activeAggregation
     member __.Current = __adaptive
     member __.aggregations = _aggregations_ :> FSharp.Data.Adaptive.amap<System.Guid, AdaptiveInteractiveStatisticsModel>
+    member __.activeAggregation = _activeAggregation_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.Option<System.Guid>>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module OutcropModelLenses = 
     type OutcropModel with
         static member aggregations_ = ((fun (self : OutcropModel) -> self.aggregations), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, InteractiveStatisticsModel>) (self : OutcropModel) -> { self with aggregations = value }))
+        static member activeAggregation_ = ((fun (self : OutcropModel) -> self.activeAggregation), (fun (value : Microsoft.FSharp.Core.Option<System.Guid>) (self : OutcropModel) -> { self with activeAggregation = value }))
 

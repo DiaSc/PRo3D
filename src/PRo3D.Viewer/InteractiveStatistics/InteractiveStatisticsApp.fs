@@ -53,10 +53,15 @@ module InteractiveStatisticsApp =
         match a with
         | AddAnnotation (id) -> m
         | RemoveAnnotation (id) -> m        
-        | StatisticsVisualizationMessage msg -> m //TODO
-             
+        | StatisticsVisualizationMessage (id,msg) ->   
+            let updatedVisualizations = m.visualisations |> HashMap.alter id (
+                fun o -> 
+                    match o with
+                    | Some model -> Some(StatisticsVisualization_App.update model msg)
+                    | None -> None            
+                )  
+            {m with visualisations = updatedVisualizations}                
           
-            
        
   
     //let rec update (m:InteractiveStatisticsModel) (a:AnnoStatsAction) =
@@ -182,14 +187,18 @@ module AnnotationStatisticsDrawings =
     let view (m:AdaptiveInteractiveStatisticsModel) =
 
         //TODO: just show all visualisations side by side (horizontally)                     
-        
-        let RDs = Incremental.div (AttributeMap.empty) 
-                    (m.visualisations |> AList.map (fun vis -> 
-                        div[style "float:left"] [
-                            (StatisticsVisualization_App.drawVisualization2 vis (new V2i(300, 150)) |> UI.map StatisticsVisualizationMessage)
-                        ]
-                        )
-                    )                                
+           
+        let RDs =             
+            Incremental.div AttributeMap.empty (
+                m.visualisations 
+                |> AMap.map (fun k v -> 
+                    div[style "float:left"] [StatisticsVisualization_App.drawVisualization2 v (new V2i(300, 150)) |> UI.map (fun f -> StatisticsVisualizationMessage (k,f))]
+                ) 
+                |> AMap.toASet 
+                |> ASet.toAList 
+                |> AList.map(fun (a,b) -> b)
+            )
+ 
         let description = AVal.map2 (fun x y -> sprintf "Aggregation for: %A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
 
         div [style "position: absolute; top: 15px; left: 15px;"] [

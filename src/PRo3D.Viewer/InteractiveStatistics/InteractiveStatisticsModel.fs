@@ -14,13 +14,13 @@ type InteractiveStatisticsModel =
         node            :   Node
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
-        visualisations  :   IndexList<StatisticsVisualizationModel>
+        visualisations  :   HashMap<Guid,StatisticsVisualizationModel>
     }
 
 type InteractiveStatisticsAction =
     | AddAnnotation of Guid
     | RemoveAnnotation of Guid
-    | StatisticsVisualizationMessage of StatisticsVisualizationAction //visualisation settings have changed
+    | StatisticsVisualizationMessage of Guid * StatisticsVisualizationAction //visualisation settings have changed
 
 module InteractiveStatisticsModel =
 
@@ -42,7 +42,7 @@ module InteractiveStatisticsModel =
         node = initNode
         path = list.Empty
         leaves = HashMap.empty
-        visualisations = IndexList.Empty
+        visualisations = HashMap.empty
         }
 
      let getAnnotationResults
@@ -89,21 +89,19 @@ module InteractiveStatisticsModel =
         let data2 = getDnSResults annotations getStrikeAzimuth
 
             //TODO: expand; currently just one visualization for testing
-        let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")
+        let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")     
         let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
 
         let a = annotations |> HashMap.ofList
 
-        let tempList = IndexList.Empty |> IndexList.add vis
-        let newList = tempList |> IndexList.add vis2
-
+        let viz = HashMap.Empty |> HashMap.add vis.id vis |> HashMap.add vis2.id vis2        
 
         {
             id = node.key
             node = node
             path = list.Empty 
             leaves = a 
-            visualisations = newList
+            visualisations = viz
         }
 
 

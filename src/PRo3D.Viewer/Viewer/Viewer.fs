@@ -1796,6 +1796,9 @@ module ViewerApp =
         | InteractiveStatsMessage msg,_,_ ->
             let interactiveModel =  InteractiveStatisticsApp.update m.interactiveStats msg
             { m with interactiveStats = interactiveModel}
+        | OutcropStatsMessage msg,_,_ ->
+            let updatedOutCrop =  OutcropApp.update m.outcropStats msg
+            { m with outcropStats = updatedOutCrop}
         | unknownAction, _, _ -> 
             Log.line "[Viewer] Message not handled: %s" (string unknownAction)
             m       

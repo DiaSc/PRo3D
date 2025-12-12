@@ -12,7 +12,14 @@ module OutcropApp =
 
     let update (m : OutcropModel) (act : OutcropAction) =
         match act with
-        | InteractiveStatisticsMessage msg -> m
+        | InteractiveStatisticsMessage (id,msg) -> 
+           let updatedAggregations = m.aggregations |> HashMap.alter id (
+            fun o -> 
+            match o with
+            | Some model -> Some(InteractiveStatisticsApp.update model msg)
+            | None -> None            
+           )  
+           {m with aggregations = updatedAggregations}          
 
         | CreateAggregation (node, groupsmodel) -> 
             //check if the aggregation already exists (if a user clicks the aggregation button again)            
@@ -37,9 +44,26 @@ module OutcropApp =
         let style' = "color: white; font-family:Consolas;"         
         //let description = m.node.name     
         
-        let test = m.aggregations |> AMap.map (fun k v -> AnnotationStatisticsDrawings.view v) |> AMap.toASet |> ASet.toAList |> AList.map(fun (a,b) -> b)
+        //let test = m.aggregations 
+                    //|> AMap.map (fun k v -> AnnotationStatisticsDrawings.view v) |> AMap.toASet |> ASet.toAList |> AList.map(fun (a,b) -> b)
              
-        Incremental.div (AttributeMap.ofList [style style']) (test) |> UI.map InteractiveStatisticsMessage
+        Incremental.div (AttributeMap.ofList [style style']) 
+            (
+                m.aggregations
+                |> AMap.map (fun k v ->
+                    AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f)))
+                |> AMap.toASet
+                |> ASet.toAList 
+                |> AList.map(fun (a,b) -> b)
+
+            )
+            
+             
+        
+        
+        
+        
+       
 
 
 

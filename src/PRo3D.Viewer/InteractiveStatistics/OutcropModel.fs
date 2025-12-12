@@ -10,11 +10,12 @@ open PRo3D.Core
 type OutcropModel = 
     {
         //note: Guid should be the same as the id of the Node
-        aggregations : HashMap<Guid, InteractiveStatisticsModel>  
+        aggregations : HashMap<Guid, InteractiveStatisticsModel>
+        activeAggregation: Option<Guid>
     }
 
 type OutcropAction =
-    | InteractiveStatisticsMessage of InteractiveStatisticsAction
+    | InteractiveStatisticsMessage of Guid * InteractiveStatisticsAction
     | CreateAggregation of Node * GroupsModel    
     | RemoveAggregation of Guid
 
@@ -22,5 +23,6 @@ type OutcropAction =
 module OutcropModel =
     let initial =
         {
-            aggregations = HashMap.empty            
+            aggregations = HashMap.empty
+            activeAggregation = None
         }

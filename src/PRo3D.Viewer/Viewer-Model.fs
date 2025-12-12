@@ -187,7 +187,7 @@ type ViewerAction =
 | SBookmarksToPoseDefinition
 | Nop
 | InteractiveStatsMessage        of PRo3D.Viewer.InteractiveStatistics.InteractiveStatisticsAction //TODO: delete later
-| OutcropStatsMessage            of PRo3D.Viewer.InteractiveStatistics. OutcropAction //TODO: there should be an outcrop id as well
+| OutcropStatsMessage            of PRo3D.Viewer.InteractiveStatistics.OutcropAction //TODO: there should be an outcrop id as well
 
 and MailboxState = {
   events  : list<MailboxAction>
