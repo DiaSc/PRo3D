@@ -18,8 +18,15 @@ module OutcropApp =
             match o with
             | Some model -> Some(InteractiveStatisticsApp.update model msg)
             | None -> None            
-           )  
-           {m with aggregations = updatedAggregations}          
+           )
+           let hovered = 
+                match (updatedAggregations |> HashMap.tryFind id) with
+                | Some model -> 
+                    match model.hoveredLeaves with
+                    | Some list -> Some id
+                    | None -> None
+                | None -> None
+           {m with aggregations = updatedAggregations; activeAggregation = hovered}          
 
         | CreateAggregation (node, groupsmodel) -> 
             //check if the aggregation already exists (if a user clicks the aggregation button again)            

@@ -11,7 +11,7 @@ type OutcropModel =
     {
         //note: Guid should be the same as the id of the Node
         aggregations : HashMap<Guid, InteractiveStatisticsModel>
-        activeAggregation: Option<Guid>
+        activeAggregation: Option<Guid> //currently used to determine if there is hovering going on in one InteractiveStatisticsModel
     }
 
 type OutcropAction =

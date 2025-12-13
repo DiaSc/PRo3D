@@ -14,6 +14,7 @@ type InteractiveStatisticsModel =
         node            :   Node
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
+        hoveredLeaves   :   Option<list<Guid>>
         visualisations  :   HashMap<Guid,StatisticsVisualizationModel>
     }
 
@@ -42,6 +43,7 @@ module InteractiveStatisticsModel =
         node = initNode
         path = list.Empty
         leaves = HashMap.empty
+        hoveredLeaves = None
         visualisations = HashMap.empty
         }
 
@@ -101,6 +103,7 @@ module InteractiveStatisticsModel =
             node = node
             path = list.Empty 
             leaves = a 
+            hoveredLeaves = None
             visualisations = viz
         }
 

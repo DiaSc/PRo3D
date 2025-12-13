@@ -13,6 +13,11 @@ type StatisticsVisualizationModel =
           | Histogram    h -> h.id
           | RoseDiagram  r -> r.id
 
+      member s.hoveringActive = 
+        match s with          
+          | Histogram    h -> h.hoveredBin
+          | RoseDiagram  r -> r.hoveredBin
+
 type StatisticsVisualizationAction = 
     | HistogramMessage of HistogramModelAction
     | RoseDiagramMessage of RoseDiagramModelAction

@@ -12,7 +12,7 @@ type RoseDiagramModel =
         [<NonAdaptive>]
         id          : Guid
         [<NonAdaptive>]
-        value       : string
+        value       : string //e.g. dip azimuth, strike azimuth etc.
         data        : List<Guid*float>
         maxBinValue : int
         avgAngle    : float
@@ -52,8 +52,10 @@ module RoseDiagramModel =
                     range           = Range1d(startDegree, endDegree)
                     annotationIDs   = List.empty
                 }
-        ]
+        ]  
     
+
+
     ///compute into which bin the data value belongs
     let computeBinAffiliation (value:float) (binAngleHalf:float) (binAngle:float) =
         let shifted = (value - 270.0 + binAngleHalf + 360.0) % 360.0 

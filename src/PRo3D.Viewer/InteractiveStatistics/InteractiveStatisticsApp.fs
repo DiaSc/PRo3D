@@ -59,8 +59,16 @@ module InteractiveStatisticsApp =
                     match o with
                     | Some model -> Some(StatisticsVisualization_App.update model msg)
                     | None -> None            
-                )  
-            {m with visualisations = updatedVisualizations}                
+                )
+            //check if a diagram is hovered
+            let hovering = 
+                match (updatedVisualizations |> HashMap.tryFind id) with
+                | Some model -> 
+                    match model.hoveringActive with
+                    | Some id -> StatisticsVisualization_App.getHoveredIDs model id
+                    | None -> None
+                | None -> None
+            {m with visualisations = updatedVisualizations; hoveredLeaves = hovering}                
           
        
   

@@ -16,6 +16,18 @@ module StatisticsVisualization_App =
         | _ -> 
             failwith "this is not a valid combination of visualization and vis action"
 
+
+    let getIDsfromBin (bins:List<BinModel>) (binID : int) =
+        let b = bins |> List.tryFind (fun b -> b.id = binID)
+        match b with
+        | Some bin -> Some(bin.annotationIDs)
+        | None -> None
+
+    let getHoveredIDs (v : StatisticsVisualizationModel) (binId : int) =
+        match v with
+        | Histogram h -> getIDsfromBin h.bins binId
+        | RoseDiagram r -> getIDsfromBin r.bins binId
+
     ///draw either a histogram or a rose diagram depending on the metric of the measurement
     let drawVisualization (p:aval<AdaptiveStatisticsVisualizationModelCase>) (dimensions:V2i)=
         
