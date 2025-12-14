@@ -1,5 +1,5 @@
-//66ceb84d-f58a-fb50-e119-92dfc2bf55b2
-//51c08217-f1ff-2293-777a-5ff957462b89
+//c92271ea-b444-3bf0-3da8-7a6146eaf596
+//b1009995-36b7-9ae4-4d0c-c259bf1f5a77
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -164,6 +164,7 @@ type AdaptiveGroupsModel(value : GroupsModel) =
             (unbox<AdaptiveNode> o).Update(v)
             o
         Adaptify.FSharp.Core.AdaptiveOption<PRo3D.Core.Node, PRo3D.Core.AdaptiveNode, PRo3D.Core.AdaptiveNode>(value.aggregateGroup, (fun (v : Node) -> AdaptiveNode(v) :> System.Object), __arg2, (fun (o : System.Object) -> unbox<AdaptiveNode> o), (fun (v : Node) -> AdaptiveNode(v) :> System.Object), __arg5, (fun (o : System.Object) -> unbox<AdaptiveNode> o))
+    let _hoveredLeaves_ = FSharp.Data.Adaptive.cset(value.hoveredLeaves)
     let mutable __value = value
     let __adaptive = FSharp.Data.Adaptive.AVal.custom((fun (token : FSharp.Data.Adaptive.AdaptiveToken) -> __value))
     static member Create(value : GroupsModel) = AdaptiveGroupsModel(value)
@@ -182,6 +183,7 @@ type AdaptiveGroupsModel(value : GroupsModel) =
             _selectedLeaves_.Value <- value.selectedLeaves
             _singleSelectLeaf_.Value <- value.singleSelectLeaf
             _aggregateGroup_.Update(value.aggregateGroup)
+            _hoveredLeaves_.Value <- value.hoveredLeaves
     member __.Current = __adaptive
     member __.version = _version_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.int>
     member __.rootGroup = _rootGroup_
@@ -193,6 +195,7 @@ type AdaptiveGroupsModel(value : GroupsModel) =
     member __.selectedLeaves = _selectedLeaves_ :> FSharp.Data.Adaptive.aset<TreeSelection>
     member __.singleSelectLeaf = _singleSelectLeaf_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.option<System.Guid>>
     member __.aggregateGroup = _aggregateGroup_ :> FSharp.Data.Adaptive.aval<Adaptify.FSharp.Core.AdaptiveOptionCase<Node, AdaptiveNode, AdaptiveNode>>
+    member __.hoveredLeaves = _hoveredLeaves_ :> FSharp.Data.Adaptive.aset<System.Guid>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module GroupsModelLenses = 
     type GroupsModel with
@@ -206,6 +209,7 @@ module GroupsModelLenses =
         static member selectedLeaves_ = ((fun (self : GroupsModel) -> self.selectedLeaves), (fun (value : FSharp.Data.Adaptive.HashSet<TreeSelection>) (self : GroupsModel) -> { self with selectedLeaves = value }))
         static member singleSelectLeaf_ = ((fun (self : GroupsModel) -> self.singleSelectLeaf), (fun (value : Microsoft.FSharp.Core.option<System.Guid>) (self : GroupsModel) -> { self with singleSelectLeaf = value }))
         static member aggregateGroup_ = ((fun (self : GroupsModel) -> self.aggregateGroup), (fun (value : Microsoft.FSharp.Core.option<Node>) (self : GroupsModel) -> { self with aggregateGroup = value }))
+        static member hoveredLeaves_ = ((fun (self : GroupsModel) -> self.hoveredLeaves), (fun (value : FSharp.Data.Adaptive.HashSet<System.Guid>) (self : GroupsModel) -> { self with hoveredLeaves = value }))
 [<System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 type AdaptiveAnnotationGroupsImporterModel(value : AnnotationGroupsImporterModel) =
     let _rootGroupI_ =

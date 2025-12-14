@@ -209,7 +209,8 @@ module AnnotationStatisticsDrawings =
  
         let description = AVal.map2 (fun x y -> sprintf "Aggregation for: %A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
 
-        div [style "position: absolute; top: 15px; left: 15px;"] [
+        //div [style "position: absolute; top: 15px; left: 15px;"] [
+        div [] [
             div [style "color: white; font-family:Consolas; font-size:16;"] [Incremental.text description]
             RDs
         ]

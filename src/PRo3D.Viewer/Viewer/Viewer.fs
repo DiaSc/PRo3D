@@ -1798,7 +1798,18 @@ module ViewerApp =
             { m with interactiveStats = interactiveModel}
         | OutcropStatsMessage msg,_,_ ->
             let updatedOutCrop =  OutcropApp.update m.outcropStats msg
-            { m with outcropStats = updatedOutCrop}
+            //check if hovering is active
+            let g = 
+                match updatedOutCrop.activeAggregation with
+                | Some agg -> 
+                    match (OutcropApp.getHoveredAnnos updatedOutCrop agg) with
+                    | Some l -> GroupsApp.update m.drawing.annotations (SetHoverSelection l)
+                    | None -> m.drawing.annotations                    
+                | None -> 
+                    GroupsApp.update m.drawing.annotations (SetHoverSelection List.empty)
+            let draw = { m.drawing with annotations = g}
+
+            { m with outcropStats = updatedOutCrop; drawing = draw}
         | unknownAction, _, _ -> 
             Log.line "[Viewer] Message not handled: %s" (string unknownAction)
             m       

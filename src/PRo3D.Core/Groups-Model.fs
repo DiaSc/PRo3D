@@ -191,6 +191,7 @@ type GroupsModel = {
     selectedLeaves       : HashSet<TreeSelection> 
     singleSelectLeaf     : option<Guid>
     aggregateGroup       : option<Node> //for RD generation (Diana)
+    hoveredLeaves        : HashSet<Guid> 
 }
 
 module Leaf =
@@ -306,6 +307,7 @@ module GroupsModel =
                 lastSelectedItem    = SelectedItem.Child
                 selectedLeaves      = HashSet.Empty 
                 aggregateGroup      = None
+                hoveredLeaves       = HashSet.Empty
                 singleSelectLeaf    = None
             }
         }
@@ -320,6 +322,7 @@ module GroupsModel =
         lastSelectedItem = SelectedItem.Child
         selectedLeaves   = HashSet.Empty
         aggregateGroup   = None
+        hoveredLeaves    = HashSet.Empty
         singleSelectLeaf = None
     }
 

@@ -5,6 +5,7 @@ open PRo3D.Base
 open PRo3D.Base.Annotation
 open Aardvark.Base
 open Aardvark.UI
+open Aardvark.UI.Primitives
 open PRo3D.Core
 open FSharp.Data.Adaptive
 
@@ -44,7 +45,11 @@ module OutcropApp =
         | RemoveAggregation (id) -> 
             let map = m.aggregations.Remove id
             {m with aggregations = map}
-            
+
+    let getHoveredAnnos (m : OutcropModel) (aggID : Guid) =
+        match (m.aggregations |> HashMap.tryFind aggID) with
+                | Some model -> model.hoveredLeaves                    
+                | None -> None            
 
     let view (m:AdaptiveOutcropModel) =        
                          
@@ -53,12 +58,14 @@ module OutcropApp =
         
         //let test = m.aggregations 
                     //|> AMap.map (fun k v -> AnnotationStatisticsDrawings.view v) |> AMap.toASet |> ASet.toAList |> AList.map(fun (a,b) -> b)
+
+           
              
         Incremental.div (AttributeMap.ofList [style style']) 
             (
                 m.aggregations
                 |> AMap.map (fun k v ->
-                    AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f)))
+                    div[style "float:left"][AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))])
                 |> AMap.toASet
                 |> ASet.toAList 
                 |> AList.map(fun (a,b) -> b)

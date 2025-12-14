@@ -39,6 +39,7 @@ type GroupsAppAction =
     | UpdateCam             of Guid
     | Nop
     | SetAggregationGroup of path : list<Index> //for RD generation (Diana)
+    | SetHoverSelection   of list<Guid>
 
 module GroupsApp =
                                         
@@ -546,6 +547,9 @@ module GroupsApp =
             let node = 
                 getNode path model.rootGroup              
             { model with aggregateGroup = Some(node)}
+        | SetHoverSelection sel ->
+            let hoveredLeaves = sel |> HashSet.ofList
+            { model with hoveredLeaves = hoveredLeaves}
         | _ -> 
             model
 
