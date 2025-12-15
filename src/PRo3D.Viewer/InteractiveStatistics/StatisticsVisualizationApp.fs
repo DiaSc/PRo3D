@@ -59,7 +59,7 @@ module StatisticsVisualization_App =
                 //let! vis = p
                 match p with
                 | AdaptiveHistogram h ->                     
-                    yield HistogramUI.histogramSettings h |> UI.map HistogramMessage                     
+                    //yield HistogramUI.histogramSettings h |> UI.map HistogramMessage                     
                     yield HistogramUI.drawHistogram' h dimensions |> UI.map HistogramMessage 
                 | AdaptiveRoseDiagram r ->                    
                     //yield RoseDiagramUI.binAngleDropDown' r|> UI.map RoseDiagramMessage 

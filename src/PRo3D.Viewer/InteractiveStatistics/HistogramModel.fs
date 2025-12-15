@@ -11,7 +11,9 @@ open Adaptify
 type HistogramModel = 
     {   
         [<NonAdaptive>]
-        id          : Guid    
+        id          : Guid
+        [<NonAdaptive>]
+        value       : string //e.g. length
         data        : List<Guid*float>
         maxBinValue : int
         numOfBins   : NumericInput
@@ -106,14 +108,18 @@ module HistogramModel =
         let createBins = createHistogramBins n domain.Min binWidth
         sortHistogramDataIntoBins createBins data domain binWidth
     
-    let initHistogram (domain:Range1d) (data:List<Guid*float>) =
-        
-        let domainStart = floor(domain.Min) 
-        let domainEnd = ceil(domain.Max)    
+    let initHistogram (data:List<Guid*float>) (value:string) =
+
+        let l = data |> List.map(fun (_,value) -> value)
+        let min = l |> List.min
+        let max = l |> List.max
+        let domainStart = floor(min) 
+        let domainEnd = ceil(max)    
         let roundedDomain = Range1d(domainStart,domainEnd)           
         let bins = setHistogramBins data roundedDomain (int(binNumeric.value))
         {
-            id          = Guid.NewGuid()       
+            id          = Guid.NewGuid()
+            value       = value
             numOfBins   = binNumeric 
             maxBinValue = BinModel.getBinMaxValue bins
             domainStart = domainNumeric domainStart

@@ -200,7 +200,7 @@ module AnnotationStatisticsDrawings =
             Incremental.div AttributeMap.empty (
                 m.visualisations 
                 |> AMap.map (fun k v -> 
-                    div[style "float:left"] [StatisticsVisualization_App.drawVisualization2 v (new V2i(300, 150)) |> UI.map (fun f -> StatisticsVisualizationMessage (k,f))]
+                    div[style "float:left; left: 15px"] [StatisticsVisualization_App.drawVisualization2 v (new V2i(300, 150)) |> UI.map (fun f -> StatisticsVisualizationMessage (k,f))]
                 ) 
                 |> AMap.toASet 
                 |> ASet.toAList 
@@ -211,7 +211,7 @@ module AnnotationStatisticsDrawings =
 
         //div [style "position: absolute; top: 15px; left: 15px;"] [
         div [] [
-            div [style "color: white; font-family:Consolas; font-size:16;"] [Incremental.text description]
+            div [style "color: white; font-family:Consolas; font-size:16;top: 15px; left: 15px;"] [Incremental.text description]
             RDs
         ]
         

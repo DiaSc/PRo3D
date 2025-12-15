@@ -86,17 +86,20 @@ module InteractiveStatisticsModel =
                 )
                 |> List.choose (fun entry -> entry) 
 
-            //TODO: expand; currently I just try with the dipAzimuth data
+            //TODO: expand
         let data = getDnSResults annotations getDipAzimuth
         let data2 = getDnSResults annotations getStrikeAzimuth
+        let data3 = getAnnotationResults annotations getLength
 
-            //TODO: expand; currently just one visualization for testing
+            //TODO: expand
         let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")     
         let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
+        let vis3 = StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data3 "length")
 
         let a = annotations |> HashMap.ofList
 
-        let viz = HashMap.Empty |> HashMap.add vis.id vis |> HashMap.add vis2.id vis2        
+        let viz = HashMap.Empty |> HashMap.add vis.id vis |> HashMap.add vis2.id vis2 |> HashMap.add vis3.id vis3       
+        
 
         {
             id = node.key

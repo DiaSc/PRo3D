@@ -23,11 +23,13 @@ module HistogramUI =
         int(round(fMinTo + fRangeTo * ((fVal-fMinFrom) / fRangeFrom)))
         //rangeTo.Min + rangeTo.Size * (value-rangeFrom.Min) / rangeFrom.Size
 
-    let drawText (position:V2i) (text:string) =
+    let drawText (position:V2i) (text:string) (fontSize:string) =
            
+           let style' = "font-size:" + fontSize + "px;" + "fill:white"
+
            let textAttr =
                amap{
-                   yield style "font-size:10px; fill:white"
+                   yield style style'
                    yield attribute "x" (sprintf "%i" position.X)     
                    yield attribute "y" (sprintf "%i" position.Y) 
                    yield attribute "text-anchor" "middle"                
@@ -266,7 +268,7 @@ module HistogramUI =
                             yield Incremental.Svg.rect (hoverRectangle x marginTop bin.id binWidth maxHeight hoverStyle) 
                             yield Incremental.Svg.rect (rectangleFromBin x y binWidth binHeight "fill:green") 
                             let textX = x+(binWidth/2)
-                            yield (drawText (V2i(textX, (marginTop+10))) (sprintf "%i" bin.count))
+                            yield (drawText (V2i(textX, (marginTop+10))) (sprintf "%i" bin.count) "10")
                         else
                             yield Incremental.Svg.rect (hoverRectangle x marginTop bin.id binWidth maxHeight "fill:none;stroke:green;stroke-width:2;stroke-opacity:0.3")
                             yield Incremental.Svg.rect (rectangleFromBin x y binWidth binHeight "fill:green")
@@ -331,6 +333,7 @@ module HistogramUI =
 
                 yield (axis (Range1i(15,15)) (Range1i(marginTop,(divHeight-marginBottom))) "white" "2") //y axis
                 yield (axis (Range1i(15, divWidth)) (Range1i(divHeight-marginBottom, divHeight-marginBottom)) "white" "2")
+                yield (drawText (V2i(50, divHeight-5)) (sprintf "value = %s" h.value) "12")
                 yield! (axisLabels [(0.0, V2i(0,(divHeight-marginBottom))); (float(maxCount), V2i(0, marginTop))] None "start" false) //yAxis Labels
                 yield! (axisLabels xCoords xAxisLabelTransform "middle" true) //xAxis Labels
                 yield! (axisTicks xTickCoords) //xAxis Ticks

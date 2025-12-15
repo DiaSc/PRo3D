@@ -101,7 +101,7 @@ module RoseDiagramModel =
         let angDeg = averageAngleRadians.DegreesFromRadians()
         (angDeg + 360.0) % 360.0
   
-    let initRoseDiagram (data:List<Guid*float>) (value:string)=
+    let initRoseDiagram (data:List<Guid*float>) (value:string) =
         let binAngle = 15.0
         let initB =  initRoseDiagramBins binAngle
         let bins = sortRoseDiagramDataIntoBins initB data binAngle

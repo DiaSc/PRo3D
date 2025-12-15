@@ -53,14 +53,8 @@ module OutcropApp =
 
     let view (m:AdaptiveOutcropModel) =        
                          
-        let style' = "color: white; font-family:Consolas;"         
-        //let description = m.node.name     
-        
-        //let test = m.aggregations 
-                    //|> AMap.map (fun k v -> AnnotationStatisticsDrawings.view v) |> AMap.toASet |> ASet.toAList |> AList.map(fun (a,b) -> b)
+        let style' = "color: white; font-family:Consolas;"        
 
-           
-             
         Incremental.div (AttributeMap.ofList [style style']) 
             (
                 m.aggregations
