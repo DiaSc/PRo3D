@@ -113,3 +113,34 @@ package | description | repo
 
 We employ the Contributor Covenant Code of Conduct. Read more [here](./CODE_OF_CONDUCT.md)
 
+
+# TIME TABLE 
+
+Tasks until the next Meeting (January 14th, 1pm)
+
+Priority: HIGH
+1) Add missing interactions (and update visualizations accordingly)
+* Delete: Annotations, Aggregations (nodes and subnodes)
+* Add: Annotations to Groupings
+* Move: Annotation Selections between Groupings
+
+2) Work on the Dashboard design
+* Table with columns (one column for each measurement)
+* Dropdown to enable user to add another measurement (currently dip_azimuth as default)
+
+3) Use the data set of the domain expert for developing/testing
+
+Priority: MEDIUM
+1) adjust low lighting until a reasonable HSV value is found
+2) bin widths should be adjustable
+3) adjust the annotation semantics (just crossbeds should be used for aggregations)
+
+
+
+
+
+
+
+
+
+

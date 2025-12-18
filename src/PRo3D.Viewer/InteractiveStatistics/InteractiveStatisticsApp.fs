@@ -205,7 +205,7 @@ module AnnotationStatisticsDrawings =
                 |> AMap.toASet 
                 |> ASet.toAList 
                 |> AList.map(fun (a,b) -> b)
-            )
+            )        
  
         let description = AVal.map2 (fun x y -> sprintf "Aggregation for: %A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
 
