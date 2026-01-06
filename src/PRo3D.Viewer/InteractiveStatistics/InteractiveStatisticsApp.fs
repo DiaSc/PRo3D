@@ -52,7 +52,11 @@ module InteractiveStatisticsApp =
     let update (m:InteractiveStatisticsModel) (a:InteractiveStatisticsAction) =
         match a with
         | AddAnnotation (id) -> m
-        | RemoveAnnotation (id) -> m        
+        | RemoveAnnotation (id) -> m     
+        | CreateVisualization (measurement) ->             
+            let vis = StatisticsVisualizationModel.createVisualization (m.leaves |> HashMap.toList) measurement
+            let visList = m.visualisations |> HashMap.add measurement vis
+            {m with visualisations = visList}
         | StatisticsVisualizationMessage (id,msg) ->   
             let updatedVisualizations = m.visualisations |> HashMap.alter id (
                 fun o -> 

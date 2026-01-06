@@ -1,5 +1,5 @@
-//11dfc7e1-63d1-cad4-c226-0f412331746d
-//31b486f4-b188-0516-ab4e-373cf887b149
+//c5953c13-c2f4-1736-9f01-3c37e2ec4de6
+//87f660ec-805e-0bd0-3f3d-fc70fd74e86c
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -42,7 +42,6 @@ type AdaptiveRoseDiagramModel(value : RoseDiagramModel) =
             _peekItem_.Value <- value.peekItem
     member __.Current = __adaptive
     member __.id = __value.id
-    member __.value = __value.value
     member __.data = _data_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.List<(System.Guid * Microsoft.FSharp.Core.float)>>
     member __.maxBinValue = _maxBinValue_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.int>
     member __.avgAngle = _avgAngle_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.float>
@@ -57,7 +56,6 @@ type AdaptiveRoseDiagramModel(value : RoseDiagramModel) =
 module RoseDiagramModelLenses = 
     type RoseDiagramModel with
         static member id_ = ((fun (self : RoseDiagramModel) -> self.id), (fun (value : System.Guid) (self : RoseDiagramModel) -> { self with id = value }))
-        static member value_ = ((fun (self : RoseDiagramModel) -> self.value), (fun (value : Microsoft.FSharp.Core.string) (self : RoseDiagramModel) -> { self with value = value }))
         static member data_ = ((fun (self : RoseDiagramModel) -> self.data), (fun (value : Microsoft.FSharp.Collections.List<(System.Guid * Microsoft.FSharp.Core.float)>) (self : RoseDiagramModel) -> { self with data = value }))
         static member maxBinValue_ = ((fun (self : RoseDiagramModel) -> self.maxBinValue), (fun (value : Microsoft.FSharp.Core.int) (self : RoseDiagramModel) -> { self with maxBinValue = value }))
         static member avgAngle_ = ((fun (self : RoseDiagramModel) -> self.avgAngle), (fun (value : Microsoft.FSharp.Core.float) (self : RoseDiagramModel) -> { self with avgAngle = value }))

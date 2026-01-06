@@ -1,5 +1,5 @@
-//85c786a3-7d91-cb75-3deb-a13be5d4f9ce
-//c294102f-3a7d-ac41-1127-01fca368c518
+//870b8593-9c34-8b6e-3ff8-a13f909c5d21
+//6dcff089-7ab5-ad58-6e7d-24928ba49029
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -40,7 +40,7 @@ type AdaptiveInteractiveStatisticsModel(value : InteractiveStatisticsModel) =
     member __.path = _path_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>>
     member __.leaves = _leaves_ :> FSharp.Data.Adaptive.amap<System.Guid, PRo3D.Base.Annotation.AdaptiveAnnotation>
     member __.hoveredLeaves = _hoveredLeaves_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.Option<Microsoft.FSharp.Collections.list<System.Guid>>>
-    member __.visualisations = _visualisations_ :> FSharp.Data.Adaptive.amap<System.Guid, AdaptiveStatisticsVisualizationModelCase>
+    member __.visualisations = _visualisations_ :> FSharp.Data.Adaptive.amap<Vis_Measurement, AdaptiveStatisticsVisualizationModelCase>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module InteractiveStatisticsModelLenses = 
     type InteractiveStatisticsModel with
@@ -49,5 +49,5 @@ module InteractiveStatisticsModelLenses =
         static member path_ = ((fun (self : InteractiveStatisticsModel) -> self.path), (fun (value : Microsoft.FSharp.Collections.list<FSharp.Data.Adaptive.Index>) (self : InteractiveStatisticsModel) -> { self with path = value }))
         static member leaves_ = ((fun (self : InteractiveStatisticsModel) -> self.leaves), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, PRo3D.Base.Annotation.Annotation>) (self : InteractiveStatisticsModel) -> { self with leaves = value }))
         static member hoveredLeaves_ = ((fun (self : InteractiveStatisticsModel) -> self.hoveredLeaves), (fun (value : Microsoft.FSharp.Core.Option<Microsoft.FSharp.Collections.list<System.Guid>>) (self : InteractiveStatisticsModel) -> { self with hoveredLeaves = value }))
-        static member visualisations_ = ((fun (self : InteractiveStatisticsModel) -> self.visualisations), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, StatisticsVisualizationModel>) (self : InteractiveStatisticsModel) -> { self with visualisations = value }))
+        static member visualisations_ = ((fun (self : InteractiveStatisticsModel) -> self.visualisations), (fun (value : FSharp.Data.Adaptive.HashMap<Vis_Measurement, StatisticsVisualizationModel>) (self : InteractiveStatisticsModel) -> { self with visualisations = value }))
 

@@ -6,13 +6,17 @@ open Aardvark.UI
 open FSharp.Data.Adaptive
 open Adaptify
 
+type Rose_Measurement =     
+    | DIP_AZIMUTH
+    | STRIKE_AZIMUTH
+
 [<ModelType>]
 type RoseDiagramModel = 
     {      
         [<NonAdaptive>]
         id          : Guid
-        [<NonAdaptive>]
-        value       : string //e.g. dip azimuth, strike azimuth etc.
+        //[<NonAdaptive>]
+        //value       : string //e.g. dip azimuth, strike azimuth etc.        
         data        : List<Guid*float>
         maxBinValue : int
         avgAngle    : float
@@ -101,7 +105,7 @@ module RoseDiagramModel =
         let angDeg = averageAngleRadians.DegreesFromRadians()
         (angDeg + 360.0) % 360.0
   
-    let initRoseDiagram (data:List<Guid*float>) (value:string) =
+    let initRoseDiagram (data:List<Guid*float>) =
         let binAngle = 15.0
         let initB =  initRoseDiagramBins binAngle
         let bins = sortRoseDiagramDataIntoBins initB data binAngle
@@ -111,7 +115,7 @@ module RoseDiagramModel =
 
         {
             id          = Guid.NewGuid() 
-            value       = value
+            //value       = value
             data        = data
             maxBinValue = max
             avgAngle    = average

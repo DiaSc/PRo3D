@@ -1,5 +1,5 @@
-//e3622221-3e29-038a-b4e7-f816f2b87aaa
-//76d89f1e-2d78-bc23-8616-551733bc1f72
+//56d0cb9b-b1be-0340-c14d-ce3f78e2a6ed
+//3d6c6e87-ab2c-7245-5ce8-40a66e0fec3f
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -38,7 +38,6 @@ type AdaptiveHistogramModel(value : HistogramModel) =
             _peekItem_.Value <- value.peekItem
     member __.Current = __adaptive
     member __.id = __value.id
-    member __.value = __value.value
     member __.data = _data_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.List<(System.Guid * Microsoft.FSharp.Core.float)>>
     member __.maxBinValue = _maxBinValue_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.int>
     member __.numOfBins = _numOfBins_
@@ -51,7 +50,6 @@ type AdaptiveHistogramModel(value : HistogramModel) =
 module HistogramModelLenses = 
     type HistogramModel with
         static member id_ = ((fun (self : HistogramModel) -> self.id), (fun (value : System.Guid) (self : HistogramModel) -> { self with id = value }))
-        static member value_ = ((fun (self : HistogramModel) -> self.value), (fun (value : Microsoft.FSharp.Core.string) (self : HistogramModel) -> { self with value = value }))
         static member data_ = ((fun (self : HistogramModel) -> self.data), (fun (value : Microsoft.FSharp.Collections.List<(System.Guid * Microsoft.FSharp.Core.float)>) (self : HistogramModel) -> { self with data = value }))
         static member maxBinValue_ = ((fun (self : HistogramModel) -> self.maxBinValue), (fun (value : Microsoft.FSharp.Core.int) (self : HistogramModel) -> { self with maxBinValue = value }))
         static member numOfBins_ = ((fun (self : HistogramModel) -> self.numOfBins), (fun (value : Aardvark.UI.Primitives.NumericInput) (self : HistogramModel) -> { self with numOfBins = value }))

@@ -6,14 +6,16 @@ open Aardvark.UI.Primitives
 open FSharp.Data.Adaptive
 open Adaptify
 
+type Histo_Measurement =     
+    | LENGTH
 
 [<ModelType>]
 type HistogramModel = 
     {   
         [<NonAdaptive>]
         id          : Guid
-        [<NonAdaptive>]
-        value       : string //e.g. length
+        //[<NonAdaptive>]
+        //value       : string //e.g. length       
         data        : List<Guid*float>
         maxBinValue : int
         numOfBins   : NumericInput
@@ -108,7 +110,7 @@ module HistogramModel =
         let createBins = createHistogramBins n domain.Min binWidth
         sortHistogramDataIntoBins createBins data domain binWidth
     
-    let initHistogram (data:List<Guid*float>) (value:string) =
+    let initHistogram (data:List<Guid*float>) =
 
         let l = data |> List.map(fun (_,value) -> value)
         let min = l |> List.min
@@ -119,7 +121,7 @@ module HistogramModel =
         let bins = setHistogramBins data roundedDomain (int(binNumeric.value))
         {
             id          = Guid.NewGuid()
-            value       = value
+            //value       = value
             numOfBins   = binNumeric 
             maxBinValue = BinModel.getBinMaxValue bins
             domainStart = domainNumeric domainStart

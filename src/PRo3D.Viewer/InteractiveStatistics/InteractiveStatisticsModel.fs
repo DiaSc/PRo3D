@@ -15,13 +15,14 @@ type InteractiveStatisticsModel =
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
         hoveredLeaves   :   Option<list<Guid>>
-        visualisations  :   HashMap<Guid,StatisticsVisualizationModel>
+        visualisations  :   HashMap<Vis_Measurement,StatisticsVisualizationModel>
     }
 
 type InteractiveStatisticsAction =
     | AddAnnotation of Guid
     | RemoveAnnotation of Guid
-    | StatisticsVisualizationMessage of Guid * StatisticsVisualizationAction //visualisation settings have changed
+    | CreateVisualization of Vis_Measurement
+    | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //visualisation settings have changed
 
 module InteractiveStatisticsModel =
 
@@ -47,34 +48,34 @@ module InteractiveStatisticsModel =
         visualisations = HashMap.empty
         }
 
-     let getAnnotationResults
-        (annotations: List<Guid*Annotation>)  
-        (annotationProperty: AnnotationResults -> float) 
-        = 
-        annotations 
-        |> List.map(fun (annoId, annotation) ->         
-            match annotation.results with
-            | Some a -> Some(annoId, a |> annotationProperty)
-            | None -> None
-        )
-        |> List.choose(fun o -> o) 
+     //let getAnnotationResults
+     //   (annotations: List<Guid*Annotation>)  
+     //   (annotationProperty: AnnotationResults -> float) 
+     //   = 
+     //   annotations 
+     //   |> List.map(fun (annoId, annotation) ->         
+     //       match annotation.results with
+     //       | Some a -> Some(annoId, a |> annotationProperty)
+     //       | None -> None
+     //   )
+     //   |> List.choose(fun o -> o) 
 
-     let getDnSResults 
-        (annotations: List<Guid*Annotation>)   
-        (dnsProperty: DipAndStrikeResults -> float) 
-        =
-        annotations 
-        |> List.map(fun (annoId, annotation) ->         
-            match annotation.dnsResults with
-            | Some a -> Some(annoId, a |> dnsProperty)
-            | None -> None
-        )
-        |> List.choose(fun o -> o)  
+     //let getDnSResults 
+     //   (annotations: List<Guid*Annotation>)   
+     //   (dnsProperty: DipAndStrikeResults -> float) 
+     //   =
+     //   annotations 
+     //   |> List.map(fun (annoId, annotation) ->         
+     //       match annotation.dnsResults with
+     //       | Some a -> Some(annoId, a |> dnsProperty)
+     //       | None -> None
+     //   )
+     //   |> List.choose(fun o -> o)  
 
-     let getLength = fun (x:AnnotationResults) -> x.length
-     let getBearing = fun (x:AnnotationResults) -> x.bearing    
-     let getDipAzimuth = fun (x:DipAndStrikeResults) -> x.dipAzimuth
-     let getStrikeAzimuth = fun (x:DipAndStrikeResults) -> x.strikeAzimuth
+     //let getLength = fun (x:AnnotationResults) -> x.length
+     //let getBearing = fun (x:AnnotationResults) -> x.bearing    
+     //let getDipAzimuth = fun (x:DipAndStrikeResults) -> x.dipAzimuth
+     //let getStrikeAzimuth = fun (x:DipAndStrikeResults) -> x.strikeAzimuth
 
      let createModel (node:Node) (data:HashMap<Guid, Leaf>)  =
         let annotations = 
@@ -87,18 +88,19 @@ module InteractiveStatisticsModel =
                 |> List.choose (fun entry -> entry) 
 
             //TODO: expand
-        let data = getDnSResults annotations getDipAzimuth
-        let data2 = getDnSResults annotations getStrikeAzimuth
-        let data3 = getAnnotationResults annotations getLength
+        //let data = getDnSResults annotations getDipAzimuth
+        //let data2 = getDnSResults annotations getStrikeAzimuth
+        //let data3 = getAnnotationResults annotations getLength
 
             //TODO: expand
-        let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")     
-        let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
-        let vis3 = StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data3 "length")
+        //let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")     
+        //let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
+        //let vis3 = StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data3 "length")
 
         let a = annotations |> HashMap.ofList
 
-        let viz = HashMap.Empty |> HashMap.add vis.id vis |> HashMap.add vis2.id vis2 |> HashMap.add vis3.id vis3       
+        let viz = HashMap.Empty //|> HashMap.add vis.id vis |> HashMap.add vis2.id vis2 |> HashMap.add vis3.id vis3
+        
         
 
         {

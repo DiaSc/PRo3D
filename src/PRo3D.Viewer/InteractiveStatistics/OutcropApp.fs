@@ -13,6 +13,16 @@ module OutcropApp =
 
     let update (m : OutcropModel) (act : OutcropAction) =
         match act with
+        | UpdateAllModels (msg) ->
+            match msg with
+            | CreateVisualization meas -> 
+                if (m.aggregations |> HashMap.isEmpty) then m else
+                    if (m.activeMeasurements |> List.contains meas) then m else  
+                        let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
+                        let updatedActives = m.activeMeasurements |> List.append [meas]
+                        {m with aggregations = updatedAggregations; activeMeasurements = updatedActives}
+            | _ -> let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
+                   {m with aggregations = updatedAggregations}            
         | InteractiveStatisticsMessage (id,msg) -> 
            let updatedAggregations = m.aggregations |> HashMap.alter id (
             fun o -> 
@@ -49,22 +59,47 @@ module OutcropApp =
     let getHoveredAnnos (m : OutcropModel) (aggID : Guid) =
         match (m.aggregations |> HashMap.tryFind aggID) with
                 | Some model -> model.hoveredLeaves                    
-                | None -> None            
+                | None -> None      
+                
+    //let viewRows ()
+
+    let mTypeDropdown =        
+        div [ clazz "ui menu"; style "width:150px; height:20px;padding:0px; margin:0px"] [
+            onBoot "$('#__ID__').dropdown('on', 'hover');" (
+                div [ clazz "ui dropdown item"; style "width:100%"] [
+                    text "Measurement"
+                    i [clazz "dropdown icon"; style "margin:0px 5px"] [] 
+                    div [ clazz "ui menu"] [
+                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.LENGTH)] [text "Length"]
+                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.DIP_AZIMUTH)] [text "Dip Azimuth"]
+                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.STRIKE_AZIMUTH)] [text "Strike Azimuth"]                         
+                    ]
+                ]
+            )
+        ] 
 
     let view (m:AdaptiveOutcropModel) =        
                          
-        let style' = "color: white; font-family:Consolas;"        
+        let style' = "color: white; font-family:Consolas;" 
 
-        Incremental.div (AttributeMap.ofList [style style']) 
-            (
-                m.aggregations
-                |> AMap.map (fun k v ->
-                    div[style "float:left"][AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))])
-                |> AMap.toASet
-                |> ASet.toAList 
-                |> AList.map(fun (a,b) -> b)
+         
+        
+        Html.table [
+            Html.row "Aggregation" [mTypeDropdown |> UI.map (fun f -> UpdateAllModels f)]
+            
 
-            )
+        ]
+
+        //Incremental.div (AttributeMap.ofList [style style']) 
+        //    (
+        //        m.aggregations
+        //        |> AMap.map (fun k v ->
+        //            div[style "float:left"][AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))])
+        //        |> AMap.toASet
+        //        |> ASet.toAList 
+        //        |> AList.map(fun (a,b) -> b)
+
+        //    )
             
              
         
