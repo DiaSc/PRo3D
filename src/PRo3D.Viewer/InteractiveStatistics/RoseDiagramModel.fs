@@ -26,7 +26,7 @@ type RoseDiagramModel =
         outerRad    : float
         binAngle    : float
         hoveredBin  : Option<int>
-        peekItem    : Option<int*float>
+        peekItem    : Option<int*float>        
     }
 
 type RoseDiagramModelAction =    

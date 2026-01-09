@@ -1,5 +1,5 @@
-//a90f337e-646a-a22c-c4f9-57c897fc9b8f
-//0784bf01-25e4-e9db-3d99-db668812cb74
+//ae193f44-f296-c3d2-49e0-09c7c5378327
+//1d3a2f8a-df4d-23ce-6a71-9efe111fef1d
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -18,7 +18,7 @@ type AdaptiveOutcropModel(value : OutcropModel) =
             m
         FSharp.Data.Traceable.ChangeableModelMap(value.aggregations, (fun (v : InteractiveStatisticsModel) -> AdaptiveInteractiveStatisticsModel(v)), __arg2, (fun (m : AdaptiveInteractiveStatisticsModel) -> m))
     let _activeAggregation_ = FSharp.Data.Adaptive.cval(value.activeAggregation)
-    let _activeMeasurements_ = FSharp.Data.Adaptive.cval(value.activeMeasurements)
+    let _activeMeasurements_ = FSharp.Data.Adaptive.clist(value.activeMeasurements)
     let mutable __value = value
     let __adaptive = FSharp.Data.Adaptive.AVal.custom((fun (token : FSharp.Data.Adaptive.AdaptiveToken) -> __value))
     static member Create(value : OutcropModel) = AdaptiveOutcropModel(value)
@@ -33,11 +33,11 @@ type AdaptiveOutcropModel(value : OutcropModel) =
     member __.Current = __adaptive
     member __.aggregations = _aggregations_ :> FSharp.Data.Adaptive.amap<System.Guid, AdaptiveInteractiveStatisticsModel>
     member __.activeAggregation = _activeAggregation_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.Option<System.Guid>>
-    member __.activeMeasurements = _activeMeasurements_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Collections.List<Vis_Measurement>>
+    member __.activeMeasurements = _activeMeasurements_ :> FSharp.Data.Adaptive.alist<Vis_Measurement>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
 module OutcropModelLenses = 
     type OutcropModel with
         static member aggregations_ = ((fun (self : OutcropModel) -> self.aggregations), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, InteractiveStatisticsModel>) (self : OutcropModel) -> { self with aggregations = value }))
         static member activeAggregation_ = ((fun (self : OutcropModel) -> self.activeAggregation), (fun (value : Microsoft.FSharp.Core.Option<System.Guid>) (self : OutcropModel) -> { self with activeAggregation = value }))
-        static member activeMeasurements_ = ((fun (self : OutcropModel) -> self.activeMeasurements), (fun (value : Microsoft.FSharp.Collections.List<Vis_Measurement>) (self : OutcropModel) -> { self with activeMeasurements = value }))
+        static member activeMeasurements_ = ((fun (self : OutcropModel) -> self.activeMeasurements), (fun (value : FSharp.Data.Adaptive.IndexList<Vis_Measurement>) (self : OutcropModel) -> { self with activeMeasurements = value }))
 

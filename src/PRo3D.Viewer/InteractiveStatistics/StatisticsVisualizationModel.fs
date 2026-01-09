@@ -26,6 +26,8 @@ type StatisticsVisualizationModel =
           | Histogram    h -> h.hoveredBin
           | RoseDiagram  r -> r.hoveredBin
 
+      //member s.measurement : Vis_Measurement
+
 type StatisticsVisualizationAction =
     | HistogramMessage of HistogramModelAction
     | RoseDiagramMessage of RoseDiagramModelAction

@@ -17,9 +17,9 @@ module OutcropApp =
             match msg with
             | CreateVisualization meas -> 
                 if (m.aggregations |> HashMap.isEmpty) then m else
-                    if (m.activeMeasurements |> List.contains meas) then m else  
+                    if (m.activeMeasurements |> IndexList.exists (fun _ v -> v = meas)) then m else  
                         let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
-                        let updatedActives = m.activeMeasurements |> List.append [meas]
+                        let updatedActives = m.activeMeasurements |> IndexList.add meas
                         {m with aggregations = updatedAggregations; activeMeasurements = updatedActives}
             | _ -> let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
                    {m with aggregations = updatedAggregations}            
@@ -59,9 +59,7 @@ module OutcropApp =
     let getHoveredAnnos (m : OutcropModel) (aggID : Guid) =
         match (m.aggregations |> HashMap.tryFind aggID) with
                 | Some model -> model.hoveredLeaves                    
-                | None -> None      
-                
-    //let viewRows ()
+                | None -> None     
 
     let mTypeDropdown =        
         div [ clazz "ui menu"; style "width:150px; height:20px;padding:0px; margin:0px"] [
@@ -78,17 +76,53 @@ module OutcropApp =
             )
         ] 
 
+    //should be in the following format: "Aggregation | MEASUREMENT_1 | MEASUREMENT_2 |...| MEASUREMENT_N | Dropdown menu"
+    let firstRow (titles : alist<Vis_Measurement>) = 
+        let firstCol = [th [] [text "Aggregation"]] |> AList.ofList
+        let headers = titles |> AList.map (fun m -> th [] [text (m.ToString())])
+        let dropdown = [th [] [mTypeDropdown]] |> AList.ofList
+        Incremental.tr AttributeMap.empty (AList.append (AList.append firstCol headers) dropdown)
+
     let view (m:AdaptiveOutcropModel) =        
                          
         let style' = "color: white; font-family:Consolas;" 
-
-         
         
-        Html.table [
-            Html.row "Aggregation" [mTypeDropdown |> UI.map (fun f -> UpdateAllModels f)]
+        //TODO HIER WEITERMACHEN
+        //let rows =
+        //    m.aggregations
+        //    |> AMap.toASet
+        //    |> ASet.map snd
+        //    |> AList.ofASet
+        //    |> AList.map (fun model ->
+        //        let vis = model.visualisations |> AMap.sortBy (fun k v -> m.activeMeasurements)
+
+        //        AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))]
+
+
+        //Placeholder
+        div[][]       
+
+
+
             
 
-        ]
+        //SONSTIGES
+
+
+        //Incremental.table 
+        //    ([clazz "ui unstackable inverted table"] |> AttributeMap.ofList)
+        //    (AList.append (AList.append headers rows) actions)
+        
+        //
+        //for each IStatsModel in m.aggregation (one model occupies one row)
+        //  create a visualization for all the measurements in m.activeMeasurements
+         
+        
+        //Html.table [
+        //    Html.row "Aggregation" [mTypeDropdown |> UI.map (fun f -> UpdateAllModels f)]
+            
+
+        //]
 
         //Incremental.div (AttributeMap.ofList [style style']) 
         //    (
@@ -100,6 +134,10 @@ module OutcropApp =
         //        |> AList.map(fun (a,b) -> b)
 
         //    )
+
+        //tr [] [
+        //                td [style "color: white; font-family:Consolas"] [Incremental.text instrument]
+        //            ]
             
              
         

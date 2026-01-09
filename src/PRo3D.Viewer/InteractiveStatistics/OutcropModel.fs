@@ -13,7 +13,7 @@ type OutcropModel =
         //note: Guid should be the same as the id of the Node
         aggregations : HashMap<Guid, InteractiveStatisticsModel>
         activeAggregation: Option<Guid> //currently used to determine if there is hovering going on in one InteractiveStatisticsModel        
-        activeMeasurements: List<Vis_Measurement>        
+        activeMeasurements: IndexList<Vis_Measurement>        
     }
 
 type OutcropAction =
@@ -31,5 +31,5 @@ module OutcropModel =
         {
             aggregations = HashMap.empty
             activeAggregation = None            
-            activeMeasurements = List.empty            
+            activeMeasurements = IndexList.Empty            
         }
