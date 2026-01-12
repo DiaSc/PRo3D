@@ -45,7 +45,7 @@ module OutcropApp =
                 Log.line "Aggregation for this node already exists."
                 m
             else
-                let model = InteractiveStatisticsModel.createModel node groupsmodel.flat
+                let model = InteractiveStatisticsModel.createModel node groupsmodel.flat m.activeMeasurements
                 let map = m.aggregations.Add (node.key, model)
                 {m with aggregations = map}
 
@@ -61,6 +61,7 @@ module OutcropApp =
                 | Some model -> model.hoveredLeaves                    
                 | None -> None     
 
+    //dropdown to select a type of measurement (e.g. dip/strike, length)               
     let mTypeDropdown =        
         div [ clazz "ui menu"; style "width:150px; height:20px;padding:0px; margin:0px"] [
             onBoot "$('#__ID__').dropdown('on', 'hover');" (
@@ -76,68 +77,29 @@ module OutcropApp =
             )
         ] 
 
+    //headers
     //should be in the following format: "Aggregation | MEASUREMENT_1 | MEASUREMENT_2 |...| MEASUREMENT_N | Dropdown menu"
     let firstRow (titles : alist<Vis_Measurement>) = 
         let firstCol = [th [] [text "Aggregation"]] |> AList.ofList
         let headers = titles |> AList.map (fun m -> th [] [text (m.ToString())])
-        let dropdown = [th [] [mTypeDropdown]] |> AList.ofList
+        let dropdown = [th [] [mTypeDropdown |> UI.map (fun f -> UpdateAllModels f)]] |> AList.ofList
         Incremental.tr AttributeMap.empty (AList.append (AList.append firstCol headers) dropdown)
 
-    let view (m:AdaptiveOutcropModel) =        
+    //create a table; each row = all visualisations for one InteractiveStatisticsModel
+    let view (m : AdaptiveOutcropModel) =       
                          
-        let style' = "color: white; font-family:Consolas;" 
+        let first = [firstRow m.activeMeasurements] |> AList.ofList        
         
-        //TODO HIER WEITERMACHEN
-        //let rows =
-        //    m.aggregations
-        //    |> AMap.toASet
-        //    |> ASet.map snd
-        //    |> AList.ofASet
-        //    |> AList.map (fun model ->
-        //        let vis = model.visualisations |> AMap.sortBy (fun k v -> m.activeMeasurements)
+        let rows =
+            m.aggregations
+            |> AMap.toASet
+            |> AList.ofASet
+            |> AList.map (fun (id,model) -> (AnnotationStatisticsDrawings.view model m.activeMeasurements) |> UI.map (fun f -> InteractiveStatisticsMessage (id,f)))    
 
-        //        AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))]
-
-
-        //Placeholder
-        div[][]       
-
-
-
-            
-
-        //SONSTIGES
-
-
-        //Incremental.table 
-        //    ([clazz "ui unstackable inverted table"] |> AttributeMap.ofList)
-        //    (AList.append (AList.append headers rows) actions)
+        Incremental.table 
+            ([clazz "ui unstackable inverted table"] |> AttributeMap.ofList)
+            (AList.append first rows)         
         
-        //
-        //for each IStatsModel in m.aggregation (one model occupies one row)
-        //  create a visualization for all the measurements in m.activeMeasurements
-         
-        
-        //Html.table [
-        //    Html.row "Aggregation" [mTypeDropdown |> UI.map (fun f -> UpdateAllModels f)]
-            
-
-        //]
-
-        //Incremental.div (AttributeMap.ofList [style style']) 
-        //    (
-        //        m.aggregations
-        //        |> AMap.map (fun k v ->
-        //            div[style "float:left"][AnnotationStatisticsDrawings.view v |> UI.map (fun f -> InteractiveStatisticsMessage (k,f))])
-        //        |> AMap.toASet
-        //        |> ASet.toAList 
-        //        |> AList.map(fun (a,b) -> b)
-
-        //    )
-
-        //tr [] [
-        //                td [style "color: white; font-family:Consolas"] [Incremental.text instrument]
-        //            ]
             
              
         

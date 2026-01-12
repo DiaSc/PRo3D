@@ -37,7 +37,6 @@ module InteractiveStatisticsModel =
         expanded = true
         }
 
-
      let initial =
         {
         id = Guid.NewGuid()
@@ -48,36 +47,8 @@ module InteractiveStatisticsModel =
         visualisations = HashMap.empty
         }
 
-     //let getAnnotationResults
-     //   (annotations: List<Guid*Annotation>)  
-     //   (annotationProperty: AnnotationResults -> float) 
-     //   = 
-     //   annotations 
-     //   |> List.map(fun (annoId, annotation) ->         
-     //       match annotation.results with
-     //       | Some a -> Some(annoId, a |> annotationProperty)
-     //       | None -> None
-     //   )
-     //   |> List.choose(fun o -> o) 
-
-     //let getDnSResults 
-     //   (annotations: List<Guid*Annotation>)   
-     //   (dnsProperty: DipAndStrikeResults -> float) 
-     //   =
-     //   annotations 
-     //   |> List.map(fun (annoId, annotation) ->         
-     //       match annotation.dnsResults with
-     //       | Some a -> Some(annoId, a |> dnsProperty)
-     //       | None -> None
-     //   )
-     //   |> List.choose(fun o -> o)  
-
-     //let getLength = fun (x:AnnotationResults) -> x.length
-     //let getBearing = fun (x:AnnotationResults) -> x.bearing    
-     //let getDipAzimuth = fun (x:DipAndStrikeResults) -> x.dipAzimuth
-     //let getStrikeAzimuth = fun (x:DipAndStrikeResults) -> x.strikeAzimuth
-
-     let createModel (node:Node) (data:HashMap<Guid, Leaf>)  =
+     //activeMeas : Measurements that are currently active (=selected by the user via dropdown)
+     let createModel (node:Node) (data:HashMap<Guid, Leaf>) (activeMeas : IndexList<Vis_Measurement>) =
         let annotations = 
                 let test = node.leaves |> IndexList.toList
                 test |> List.map (fun id -> 
@@ -87,29 +58,15 @@ module InteractiveStatisticsModel =
                 )
                 |> List.choose (fun entry -> entry) 
 
-            //TODO: expand
-        //let data = getDnSResults annotations getDipAzimuth
-        //let data2 = getDnSResults annotations getStrikeAzimuth
-        //let data3 = getAnnotationResults annotations getLength
-
-            //TODO: expand
-        //let vis = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data "dip Azimuth")     
-        //let vis2 = StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data2 "strike Azimuth")
-        //let vis3 = StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data3 "length")
-
-        let a = annotations |> HashMap.ofList
-
-        let viz = HashMap.Empty //|> HashMap.add vis.id vis |> HashMap.add vis2.id vis2 |> HashMap.add vis3.id vis3
-        
-        
+        let vis = activeMeas |> IndexList.toList |> List.map (fun elem -> (elem, StatisticsVisualizationModel.createVisualization annotations elem)) |> HashMap.ofList          
 
         {
             id = node.key
             node = node
             path = list.Empty 
-            leaves = a 
+            leaves = (annotations |> HashMap.ofList)
             hoveredLeaves = None
-            visualisations = viz
+            visualisations = vis
         }
 
 

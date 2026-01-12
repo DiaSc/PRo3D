@@ -10,49 +10,13 @@ open PRo3D.Core
 open FSharp.Data.Adaptive
 //open PRo3D.Viewer.InteractiveStatistics
 
-module InteractiveStatisticsApp =     
+module InteractiveStatisticsApp =         
     
-    //let getAnnotationResults
-    //    (annotations: List<Guid*Annotation>)  
-    //    (annotationProperty: AnnotationResults -> float) 
-    //    = 
-    //    annotations 
-    //    |> List.map(fun (annoId, annotation) ->         
-    //        match annotation.results with
-    //        | Some a -> Some(annoId, a |> annotationProperty)
-    //        | None -> None
-    //    )
-    //    |> List.choose(fun o -> o) 
-
-    //let getDnSResults 
-    //    (annotations: List<Guid*Annotation>)   
-    //    (dnsProperty: DipAndStrikeResults -> float) 
-    //    =
-    //    annotations 
-    //    |> List.map(fun (annoId, annotation) ->         
-    //        match annotation.dnsResults with
-    //        | Some a -> Some(annoId, a |> dnsProperty)
-    //        | None -> None
-    //    )
-    //    |> List.choose(fun o -> o)  
-
-    //let getLength = fun (x:AnnotationResults) -> x.length
-    //let getBearing = fun (x:AnnotationResults) -> x.bearing    
-    //let getDipAzimuth = fun (x:DipAndStrikeResults) -> x.dipAzimuth
-    //let getStrikeAzimuth = fun (x:DipAndStrikeResults) -> x.strikeAzimuth
-
-    //let getMeasurementData (mType:MeasurementType) (selected:List<Guid*Annotation>) =
-    //    match mType.kind with
-    //    | Kind.LENGTH -> getAnnotationResults selected getLength     
-    //    | Kind.BEARING -> getAnnotationResults selected getBearing            
-    //    | Kind.DIP_AZIMUTH -> getDnSResults selected getDipAzimuth
-    //    | Kind.STRIKE_AZIMUTH -> getDnSResults selected getStrikeAzimuth
-
 
     let update (m:InteractiveStatisticsModel) (a:InteractiveStatisticsAction) =
         match a with
-        | AddAnnotation (id) -> m
-        | RemoveAnnotation (id) -> m     
+        | AddAnnotation (id) -> m //TODO
+        | RemoveAnnotation (id) -> m //TODO
         | CreateVisualization (measurement) ->             
             let vis = StatisticsVisualizationModel.createVisualization (m.leaves |> HashMap.toList) measurement
             let visList = m.visualisations |> HashMap.add measurement vis
@@ -174,65 +138,30 @@ module InteractiveStatisticsApp =
             //{m with selectedAnnotations = (updatedAnnotations |> HashMap.ofList)}
 
 
-                
-//TODO: just show all visualisations side by side (horizontally)
 
-//UI related 
 module AnnotationStatisticsDrawings =
+    
+    let view (m : AdaptiveInteractiveStatisticsModel) (measurements : alist<Vis_Measurement>) =   
 
-    //let mTypeDropdown =        
-    //    div [ clazz "ui menu"; style "width:150px; height:20px;padding:0px; margin:0px"] [
-    //        onBoot "$('#__ID__').dropdown('on', 'hover');" (
-    //            div [ clazz "ui dropdown item"; style "width:100%"] [
-    //                text "Properties"
-    //                i [clazz "dropdown icon"; style "margin:0px 5px"] [] 
-    //                div [ clazz "ui menu"] [
-    //                    div [clazz "ui inverted item"; onMouseClick (fun _ -> AddNewMeasurement (StatisticsMeasurementModel.initMeasurementType Kind.LENGTH Scale.Metric))] [text "Length"]
-    //                    div [clazz "ui inverted item"; onMouseClick (fun _ -> AddNewMeasurement (StatisticsMeasurementModel.initMeasurementType Kind.BEARING Scale.Angular))] [text "Bearing"]
-    //                    div [clazz "ui inverted item"; onMouseClick (fun _ -> AddNewMeasurement (StatisticsMeasurementModel.initMeasurementType Kind.DIP_AZIMUTH Scale.Angular))] [text "Dip Azimuth"] 
-    //                    div [clazz "ui inverted item"; onMouseClick (fun _ -> AddNewMeasurement (StatisticsMeasurementModel.initMeasurementType Kind.STRIKE_AZIMUTH Scale.Angular))] [text "Strike Azimuth"] 
-    //                ]
-    //            ]
-    //        )
-    //    ] 
-
-    let view (m:AdaptiveInteractiveStatisticsModel) =
-
-        //TODO: just show all visualisations side by side (horizontally)                     
-           
-        let RDs =             
-            Incremental.div AttributeMap.empty (
-                m.visualisations 
-                |> AMap.map (fun k v -> 
-                    div[style "float:left; left: 15px"] [StatisticsVisualization_App.drawVisualization2 v (new V2i(300, 150)) |> UI.map (fun f -> StatisticsVisualizationMessage (k,f))]
-                ) 
-                |> AMap.toASet 
-                |> ASet.toAList 
-                |> AList.map(fun (a,b) -> b)
-            )        
- 
-        let description = AVal.map2 (fun x y -> sprintf "Aggregation for: %A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
-
-        //div [style "position: absolute; top: 15px; left: 15px;"] [
-        div [] [
-            div [style "color: white; font-family:Consolas; font-size:16;top: 15px; left: 15px;"] [Incremental.text description]
-            RDs
-        ]
+        //name of the node and number of annotations in it
+        let firstCell = 
+            let s = AVal.map2 (fun x y -> sprintf "%A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
+            let it = Incremental.text s                        
+            [td [] [it]] |> AList.ofList
         
+        //all visualisations
+        let cells = 
+            measurements 
+            |> AList.map (fun meas -> 
+                let vis = m.visualisations |> AMap.tryFind meas |> AVal.force
+                match vis with
+                | Some v -> td [] [StatisticsVisualization_App.drawVisualization2 v (new V2i(300, 150)) |> UI.map (fun f -> StatisticsVisualizationMessage (meas,f))]
+                | None -> td [] []  
+            )                     
 
-        
-            
-                
+        Incremental.tr AttributeMap.empty (AList.append firstCell cells)
 
 
-
-                     
-      
-  
-     
-
-        //let v = 
-        //    div[][StatisticsVisualization_App.drawVisualization m.visualisations. (new V2i(300, 150)) |> UI.map StatisticsVisualizationMessage]
              
         
         
