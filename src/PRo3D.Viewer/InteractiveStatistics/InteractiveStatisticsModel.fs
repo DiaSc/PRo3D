@@ -48,23 +48,15 @@ module InteractiveStatisticsModel =
         }
 
      //activeMeas : Measurements that are currently active (=selected by the user via dropdown)
-     let createModel (node:Node) (data:HashMap<Guid, Leaf>) (activeMeas : IndexList<Vis_Measurement>) =
-        let annotations = 
-                let test = node.leaves |> IndexList.toList
-                test |> List.map (fun id -> 
-                    match (data |> HashMap.tryFind id) with
-                    | Some leaf -> Some(id,Leaf.toAnnotation leaf)
-                    | None -> None
-                )
-                |> List.choose (fun entry -> entry) 
+     let createModel (node:Node) (data:list<Guid*Annotation>) (activeMeas : IndexList<Vis_Measurement>) =        
 
-        let vis = activeMeas |> IndexList.toList |> List.map (fun elem -> (elem, StatisticsVisualizationModel.createVisualization annotations elem)) |> HashMap.ofList          
+        let vis = activeMeas |> IndexList.toList |> List.map (fun elem -> (elem, StatisticsVisualizationModel.createVisualization data elem)) |> HashMap.ofList          
 
         {
             id = node.key
             node = node
             path = list.Empty 
-            leaves = (annotations |> HashMap.ofList)
+            leaves = (data |> HashMap.ofList)
             hoveredLeaves = None
             visualisations = vis
         }

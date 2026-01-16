@@ -7,12 +7,12 @@ open PRo3D.Viewer.InteractiveStatistics﻿
 
 module StatisticsVisualization_App =
 
-    let update (v:StatisticsVisualizationModel) (act:StatisticsVisualizationAction) =
+    let rec update (v:StatisticsVisualizationModel) (act:StatisticsVisualizationAction) =
         match (v,act) with
         | Histogram h, HistogramMessage ha -> 
             StatisticsVisualizationModel.Histogram (HistogramApp.update h ha)
         | RoseDiagram r, RoseDiagramMessage ra -> 
-            StatisticsVisualizationModel.RoseDiagram (RoseDiagramApp.update r ra)
+            StatisticsVisualizationModel.RoseDiagram (RoseDiagramApp.update r ra)        
         | _ -> 
             failwith "this is not a valid combination of visualization and vis action"
 

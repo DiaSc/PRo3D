@@ -16,7 +16,22 @@ module InteractiveStatisticsApp =
     let update (m:InteractiveStatisticsModel) (a:InteractiveStatisticsAction) =
         match a with
         | AddAnnotation (id) -> m //TODO
-        | RemoveAnnotation (id) -> m //TODO
+        | RemoveAnnotation (id) -> 
+            let leaves' = m.leaves |> HashMap.remove id
+
+            //update the data of all visualisations
+            let leavesList = leaves' |> HashMap.toList
+            let vis' = 
+                m.visualisations 
+                |> HashMap.map (fun m model -> 
+                    let data' = StatisticsVisualizationModel.getVisualizationData leavesList m
+                    let model' = 
+                        match model with
+                        | Histogram h -> StatisticsVisualization_App.update model (HistogramMessage (UpdateData data'))
+                        | RoseDiagram r -> StatisticsVisualization_App.update model (RoseDiagramMessage (UpdateRD data'))
+                    model'
+                )
+            {m with leaves = leaves'; visualisations = vis'}
         | CreateVisualization (measurement) ->             
             let vis = StatisticsVisualizationModel.createVisualization (m.leaves |> HashMap.toList) measurement
             let visList = m.visualisations |> HashMap.add measurement vis

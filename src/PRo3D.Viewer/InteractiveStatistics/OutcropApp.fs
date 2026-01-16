@@ -45,9 +45,26 @@ module OutcropApp =
                 Log.line "Aggregation for this node already exists."
                 m
             else
-                let model = InteractiveStatisticsModel.createModel node groupsmodel.flat m.activeMeasurements
+                let annotations = 
+                    node.leaves 
+                    |> IndexList.toList
+                    |> List.map (fun id -> 
+                        match (groupsmodel.flat |> HashMap.tryFind id) with
+                        | Some leaf -> Some(id,Leaf.toAnnotation leaf)
+                        | None -> None
+                    )
+                    |> List.choose (fun entry -> entry)
+
+                let model = InteractiveStatisticsModel.createModel node annotations m.activeMeasurements
                 let map = m.aggregations.Add (node.key, model)
-                {m with aggregations = map}
+
+                //add node leaves to allLeaves map
+                let allLeaves = 
+                    annotations
+                    |> List.map (fun (id,a) -> (a.key, node.key))
+                    |> HashMap.ofList
+
+                {m with aggregations = map; allLeaves = allLeaves}
 
         //| UpdateAggregation (id, act) -> m //TODO
 

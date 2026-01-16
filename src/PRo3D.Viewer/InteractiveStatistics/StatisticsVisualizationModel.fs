@@ -30,7 +30,7 @@ type StatisticsVisualizationModel =
 
 type StatisticsVisualizationAction =
     | HistogramMessage of HistogramModelAction
-    | RoseDiagramMessage of RoseDiagramModelAction
+    | RoseDiagramMessage of RoseDiagramModelAction    
 
 
 module StatisticsVisualizationModel =
@@ -62,19 +62,18 @@ module StatisticsVisualizationModel =
             | None -> None
         )
         |> List.choose(fun o -> o)
-     
+
+    
+    let getVisualizationData (annotations: List<Guid*Annotation>) (measurement:Vis_Measurement) =
+        match measurement with
+        | LENGTH -> getAnnotationResults annotations getLength         
+        | DIP_AZIMUTH -> getDnSResults annotations getDipAzimuth            
+        | STRIKE_AZIMUTH -> getDnSResults annotations getStrikeAzimuth
 
     let createVisualization (annotations: List<Guid*Annotation>) (measurement:Vis_Measurement) =
+        let data = getVisualizationData annotations measurement
         match measurement with
-        | LENGTH -> 
-            let data = getAnnotationResults annotations getLength
-            StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data)
-
-        | DIP_AZIMUTH -> 
-            let data = getDnSResults annotations getDipAzimuth
-            StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
-
-        | STRIKE_AZIMUTH -> 
-            let data = getDnSResults annotations getStrikeAzimuth
-            StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
+        | LENGTH -> StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data)
+        | DIP_AZIMUTH -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
+        | STRIKE_AZIMUTH -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)    
 

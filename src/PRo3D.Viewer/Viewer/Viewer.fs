@@ -465,6 +465,7 @@ module ViewerApp =
         (m         : Model) 
         (msg       : ViewerAction) =
         //Log.line "[Viewer_update] %A inter:%A pick:%A" msg m.interaction m.picking
+        //Log.line "[Viewer_update] %A" msg
         match msg, m.interaction, m.ctrlFlag with
         | NavigationMessage  msg,_,false when (isGrabbed m |> not) && (not (AnimationApp.shouldAnimate m.animations)) ->                
             let c   = m.scene.config
@@ -513,8 +514,17 @@ module ViewerApp =
             |> Optic.set _frustumModel frustumModel 
         | AnnotationGroupsMessageViewer msg,_,_ ->
             let ag = m.drawing.annotations 
-                
-            { m with drawing = { m.drawing with annotations = GroupsApp.update ag msg}}
+
+            //GroupsAppAction.RemoveLeaf gets processed here
+            let om = 
+                match msg with
+                | GroupsAppAction.RemoveLeaf (id,_) -> 
+                    let i = m.outcropStats.allLeaves |> HashMap.tryFind id
+                    match i with
+                    | Some index -> OutcropApp.update m.outcropStats (OutcropAction.InteractiveStatisticsMessage (index, RemoveAnnotation id))
+                    | None -> m.outcropStats    
+                | _ -> m.outcropStats 
+            { m with drawing = { m.drawing with annotations = GroupsApp.update ag msg}; outcropStats = om}
         | DrawingMessage msg,_,_-> //Interactions.DrawAnnotation
             match msg with
             | Drawing.FlyToAnnotation id ->
@@ -575,9 +585,13 @@ module ViewerApp =
                             match drawing.annotations.aggregateGroup with
                             | Some n -> OutcropApp.update m.outcropStats (OutcropAction.CreateAggregation (n, drawing.annotations))
                             | None -> m.outcropStats
-                            //match drawing.annotations.aggregateGroup with
-                            //    | Some n -> InteractiveStatisticsApp.update m.interactiveStats (InteractiveStatisticsAction.CreateRDFromGroup (n, drawing.annotations))
-                            //    | None -> m.interactiveStats                            
+
+                        | GroupsAppAction.RemoveLeaf (id, _) -> 
+                            let i = m.outcropStats.allLeaves |> HashMap.tryFind id
+                            match i with
+                            | Some index -> OutcropApp.update m.outcropStats (OutcropAction.InteractiveStatisticsMessage (index, RemoveAnnotation id))
+                            | None -> m.outcropStats
+                                                       
                         | _ -> m.outcropStats
                     //| Drawing.PickDirectly id | Drawing.PickAnnotation (_,id) -> 
                         //InteractiveStatisticsApp.update m.interactiveStats (AnnoStatsAction.UpdateSingleSelectedAnnotation (id,drawing.annotations))
