@@ -512,19 +512,26 @@ module ViewerApp =
                 {frustumModel with frustum = frustum}
             { m with frustum = frustum}
             |> Optic.set _frustumModel frustumModel 
-        | AnnotationGroupsMessageViewer msg,_,_ ->
-            let ag = m.drawing.annotations 
+        | AnnotationGroupsMessageViewer msg,_,_ ->             
+            let ag = GroupsApp.update m.drawing.annotations  msg
 
             //GroupsAppAction.RemoveLeaf gets processed here
+            //GroupsAppAction.MoveLeaves gets processed here
+
             let om = 
                 match msg with
                 | GroupsAppAction.RemoveLeaf (id,_) -> 
                     let i = m.outcropStats.allLeaves |> HashMap.tryFind id
                     match i with
                     | Some index -> OutcropApp.update m.outcropStats (OutcropAction.InteractiveStatisticsMessage (index, RemoveAnnotation id))
-                    | None -> m.outcropStats    
+                    | None -> m.outcropStats  
+                | GroupsAppAction.MoveLeaves ->
+                    let destination = ag.activeGroup.id
+                    let leavesMoved = ag.selectedLeaves
+                    m.outcropStats //TODO
                 | _ -> m.outcropStats 
-            { m with drawing = { m.drawing with annotations = GroupsApp.update ag msg}; outcropStats = om}
+
+            { m with drawing = { m.drawing with annotations = ag}; outcropStats = om}
         | DrawingMessage msg,_,_-> //Interactions.DrawAnnotation
             match msg with
             | Drawing.FlyToAnnotation id ->

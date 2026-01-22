@@ -11,6 +11,7 @@ type InteractiveStatisticsModel =
     {
         [<NonAdaptive>]
         id              :   Guid
+        active          :   bool
         node            :   Node
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
@@ -19,7 +20,8 @@ type InteractiveStatisticsModel =
     }
 
 type InteractiveStatisticsAction =
-    | AddAnnotation of Guid
+    | SetActive
+    | AddAnnotation of list<Guid> //add one or multiple annotations
     | RemoveAnnotation of Guid
     | CreateVisualization of Vis_Measurement
     | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //visualisation settings have changed
@@ -40,6 +42,7 @@ module InteractiveStatisticsModel =
      let initial =
         {
         id = Guid.NewGuid()
+        active = false
         node = initNode
         path = list.Empty
         leaves = HashMap.empty
@@ -54,6 +57,7 @@ module InteractiveStatisticsModel =
 
         {
             id = node.key
+            active = true
             node = node
             path = list.Empty 
             leaves = (data |> HashMap.ofList)

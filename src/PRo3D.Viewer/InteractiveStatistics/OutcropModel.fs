@@ -19,6 +19,7 @@ type OutcropModel =
 
 type OutcropAction =
     | UpdateAllModels of InteractiveStatisticsAction //update all aggregations
+    | MoveAnnotations of Guid * IndexList<Guid> //Guid = id of destination; IndexList = ids of the annotations to be moved
     | InteractiveStatisticsMessage of Guid * InteractiveStatisticsAction //update a single aggregation
     | CreateAggregation of Node * GroupsModel 
     | RemoveAggregation of Guid

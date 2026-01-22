@@ -15,7 +15,13 @@ module InteractiveStatisticsApp =
 
     let update (m:InteractiveStatisticsModel) (a:InteractiveStatisticsAction) =
         match a with
-        | AddAnnotation (id) -> m //TODO
+        | SetActive ->  {m with active = true}
+        | AddAnnotation (ids) -> m //TODO
+
+
+
+
+
         | RemoveAnnotation (id) -> 
             let leaves' = m.leaves |> HashMap.remove id
 

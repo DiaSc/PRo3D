@@ -11,7 +11,7 @@ open FSharp.Data.Adaptive
 
 module OutcropApp =
 
-    let update (m : OutcropModel) (act : OutcropAction) =
+    let rec update (m : OutcropModel) (act : OutcropAction) =
         match act with
         | UpdateAllModels (msg) ->
             match msg with
@@ -40,10 +40,16 @@ module OutcropApp =
            {m with aggregations = updatedAggregations; activeAggregation = hovered}          
 
         | CreateAggregation (node, groupsmodel) -> 
-            //check if the aggregation already exists (if a user clicks the aggregation button again)            
-            if m.aggregations.ContainsKey node.key then
-                Log.line "Aggregation for this node already exists."
-                m
+            let newID = node.key
+            //check if the aggregation already exists (if a user clicks the aggregation button again or an agg. for a subnode is required)            
+            if m.aggregations.ContainsKey newID then
+                let a = m.aggregations |> HashMap.find newID 
+                if a.active then 
+                    Log.line "Aggregation already exists and is active." 
+                    m
+                else
+                    Log.line "Aggregation set active."
+                    update m (InteractiveStatisticsMessage (newID, SetActive))
             else
                 let annotations = 
                     node.leaves 
@@ -56,12 +62,12 @@ module OutcropApp =
                     |> List.choose (fun entry -> entry)
 
                 let model = InteractiveStatisticsModel.createModel node annotations m.activeMeasurements
-                let map = m.aggregations.Add (node.key, model)
+                let map = m.aggregations.Add (newID, model)
 
                 //add node leaves to allLeaves map
                 let allLeaves = 
                     annotations
-                    |> List.map (fun (id,a) -> (a.key, node.key))
+                    |> List.map (fun (id,a) -> (a.key, newID))
                     |> HashMap.ofList
 
                 {m with aggregations = map; allLeaves = allLeaves}
@@ -72,6 +78,48 @@ module OutcropApp =
         | RemoveAggregation (id) -> 
             let map = m.aggregations.Remove id
             {m with aggregations = map}
+
+        | MoveAnnotations (destination, toMove) -> 
+            let move = m.aggregations.ContainsKey destination
+            let toUpdate = 
+                    m.allLeaves 
+                    |> HashMap.filter (fun anno _ -> (toMove |> IndexList.exists (fun _ id -> id = anno)))
+                    |> HashMap.toList
+                    |> List.map (fun (x,y) -> (y,x)) //now we have (ISM id, Anno id)
+                    |> HashMap.ofList
+            
+            //TODO
+            match (move, toUpdate.IsEmpty) with
+            | true, true -> 
+                //add all annotations to the destination ISM; no deletion in other ISMs
+                m
+                //update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+            | false, false -> 
+                //there is no destination ISM but annotations should be removed from other ISMs
+                let aggs' = m.aggregations |> HashMap.map (fun k v -> 
+                        match (toUpdate |> HashMap.tryFind k) with
+                        | Some a -> InteractiveStatisticsApp.update v (RemoveAnnotation a)
+                        | None -> v   
+                        )
+                {m with aggregations = aggs'}
+            | true, false -> 
+                //add all annotations to the destination ISM; delete annotations in other ISMs
+                //let m' = update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+                //let aggs' = m'.aggregations |> HashMap.map (fun k v -> 
+                //        match (toUpdate |> HashMap.tryFind k) with
+                //        | Some a -> InteractiveStatisticsApp.update v (RemoveAnnotation a)
+                //        | None -> v   
+                //        )
+                //{m with aggregations = aggs'}
+                m
+            | false, true -> 
+                //there is neither a destination ISM, nor are the moved annos connected to other ISMs
+                m
+                       
+
+            
+
+
 
     let getHoveredAnnos (m : OutcropModel) (aggID : Guid) =
         match (m.aggregations |> HashMap.tryFind aggID) with
