@@ -21,7 +21,7 @@ type InteractiveStatisticsModel =
 
 type InteractiveStatisticsAction =
     | SetActive
-    | AddAnnotation of list<Guid> //add one or multiple annotations
+    | AddAnnotation of list<Guid * Annotation> //add one or multiple annotations
     | RemoveAnnotation of Guid
     | CreateVisualization of Vis_Measurement
     | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //visualisation settings have changed

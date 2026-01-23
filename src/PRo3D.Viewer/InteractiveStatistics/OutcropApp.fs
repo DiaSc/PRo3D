@@ -65,12 +65,13 @@ module OutcropApp =
                 let map = m.aggregations.Add (newID, model)
 
                 //add node leaves to allLeaves map
-                let allLeaves = 
+                let allLeaves' = 
                     annotations
                     |> List.map (fun (id,a) -> (a.key, newID))
                     |> HashMap.ofList
+                    |> HashMap.union m.allLeaves
 
-                {m with aggregations = map; allLeaves = allLeaves}
+                {m with aggregations = map; allLeaves = allLeaves'}
 
         //| UpdateAggregation (id, act) -> m //TODO
 
@@ -80,20 +81,18 @@ module OutcropApp =
             {m with aggregations = map}
 
         | MoveAnnotations (destination, toMove) -> 
-            let move = m.aggregations.ContainsKey destination
+            let destinationActive = m.aggregations.ContainsKey destination
             let toUpdate = 
                     m.allLeaves 
-                    |> HashMap.filter (fun anno _ -> (toMove |> IndexList.exists (fun _ id -> id = anno)))
+                    |> HashMap.filter (fun anno _ -> (toMove |> List.exists (fun (id,_) -> id = anno)))
                     |> HashMap.toList
                     |> List.map (fun (x,y) -> (y,x)) //now we have (ISM id, Anno id)
-                    |> HashMap.ofList
+                    |> HashMap.ofList            
             
-            //TODO
-            match (move, toUpdate.IsEmpty) with
+            match (destinationActive, toUpdate.IsEmpty) with
             | true, true -> 
-                //add all annotations to the destination ISM; no deletion in other ISMs
-                m
-                //update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+                //add all annotations to the destination ISM; no deletion in other ISMs               
+                update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
             | false, false -> 
                 //there is no destination ISM but annotations should be removed from other ISMs
                 let aggs' = m.aggregations |> HashMap.map (fun k v -> 
@@ -104,14 +103,13 @@ module OutcropApp =
                 {m with aggregations = aggs'}
             | true, false -> 
                 //add all annotations to the destination ISM; delete annotations in other ISMs
-                //let m' = update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
-                //let aggs' = m'.aggregations |> HashMap.map (fun k v -> 
-                //        match (toUpdate |> HashMap.tryFind k) with
-                //        | Some a -> InteractiveStatisticsApp.update v (RemoveAnnotation a)
-                //        | None -> v   
-                //        )
-                //{m with aggregations = aggs'}
-                m
+                let m' = update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+                let aggs' = m'.aggregations |> HashMap.map (fun k v -> 
+                        match (toUpdate |> HashMap.tryFind k) with
+                        | Some a -> InteractiveStatisticsApp.update v (RemoveAnnotation a)
+                        | None -> v   
+                        )
+                {m with aggregations = aggs'}                
             | false, true -> 
                 //there is neither a destination ISM, nor are the moved annos connected to other ISMs
                 m
