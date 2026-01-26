@@ -91,8 +91,15 @@ module OutcropApp =
             
             match (destinationActive, toUpdate.IsEmpty) with
             | true, true -> 
-                //add all annotations to the destination ISM; no deletion in other ISMs               
-                update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+                //add all annotations to the destination ISM; no deletion in other ISMs    
+                //add new annotations to allLeaves HashMap
+                let m' = update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
+                let flat = 
+                    toMove 
+                    |> List.map (fun (annoId,_) -> (annoId,destination))
+                    |> HashMap.ofList
+                    |> HashMap.union m'.allLeaves
+                {m' with allLeaves = flat}
             | false, false -> 
                 //there is no destination ISM but annotations should be removed from other ISMs
                 let aggs' = m.aggregations |> HashMap.map (fun k v -> 
@@ -100,9 +107,14 @@ module OutcropApp =
                         | Some a -> InteractiveStatisticsApp.update v (RemoveAnnotation a)
                         | None -> v   
                         )
-                {m with aggregations = aggs'}
+                //annotations must also be removed from allLeaves HashMap
+                let flat = 
+                    let idsToRemove = toUpdate |> HashMap.values |> Seq.toList
+                    m.allLeaves |> HashMap.filter (fun annoId _ -> (idsToRemove |> List.exists (fun i -> i <> annoId)))
+                {m with aggregations = aggs'; allLeaves = flat}
             | true, false -> 
                 //add all annotations to the destination ISM; delete annotations in other ISMs
+                //no changes to the allLeaves HashMap (leaves just move from one ISM to another)
                 let m' = update m (InteractiveStatisticsMessage(destination, AddAnnotation toMove))
                 let aggs' = m'.aggregations |> HashMap.map (fun k v -> 
                         match (toUpdate |> HashMap.tryFind k) with

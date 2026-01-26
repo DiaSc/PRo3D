@@ -524,7 +524,10 @@ module ViewerApp =
                 | GroupsAppAction.RemoveLeaf (id,_) -> 
                     let i = m.outcropStats.allLeaves |> HashMap.tryFind id
                     match i with
-                    | Some index -> OutcropApp.update m.outcropStats (OutcropAction.InteractiveStatisticsMessage (index, RemoveAnnotation id))
+                    | Some index -> 
+                        let m' = OutcropApp.update m.outcropStats (OutcropAction.InteractiveStatisticsMessage (index, RemoveAnnotation id))
+                        let flat = m'.allLeaves |> HashMap.remove id
+                        {m.outcropStats with allLeaves = flat}
                     | None -> m.outcropStats  
                 | GroupsAppAction.MoveLeaves ->
                     let destination = ag.activeGroup.id
