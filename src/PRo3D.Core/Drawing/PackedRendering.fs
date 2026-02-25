@@ -466,7 +466,7 @@ module PackedRendering =
                             if HashSet.contains id hovered then anno.color.c.GetValue(t)  
                             else                                 
                                 let hsv = anno.color.c.GetValue(t) |> C3f.FromC4b |> HSVf.FromC3f
-                                let hsv' = HSVf(hsv.H, 0.5f, 0.5f)
+                                let hsv' = HSVf(hsv.H, 0.7f, 0.7f)
                                 hsv'.ToC3f().ToC3b().ToC4b()
 
 

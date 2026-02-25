@@ -735,12 +735,14 @@ module DrawingApp =
                                 let id : int = floor p.A |> int //BitConverter.SingleToInt32Bits(p.A)
                                 let ids = pickIds.GetValue()
                                 if id >= 0 && id < ids.Length  && allowed then
-                                    //Log.line "hoverhit %A" (id, ids.[id])
+                                    Log.line "hoverhit %A" (id, ids.[id])
                                     transact (fun _ -> hoveredAnnotation.Value <- id)
-                                    Seq.empty
+                                    Seq.ofList[DrawingAction.StartPeek ids.[id]]
+                                    //Seq.empty
                                 else 
                                     transact (fun _ -> hoveredAnnotation.Value <- -1)
-                                    Seq.empty
+                                    Seq.ofList[DrawingAction.EndPeek]
+                                    //Seq.empty
                             with e -> Seq.empty
                        )
                        Sg.onMouseDown (fun b p -> 

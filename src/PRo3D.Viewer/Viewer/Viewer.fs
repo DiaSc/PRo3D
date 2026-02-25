@@ -581,6 +581,19 @@ module ViewerApp =
                     //{ m with correlationPlot = cp } |> shortFeedback msg
                     m
                 | None -> m
+            | Drawing.StartPeek id ->
+                let g = m.drawing.annotations
+                let m' = 
+                    match (g.flat |> HashMap.tryFind id) with
+                    | Some leaf -> 
+                        let annotation = Leaf.toAnnotation leaf
+                        let om = OutcropApp.update m.outcropStats (Peeking (Some annotation)) 
+                        { m with outcropStats = om}
+                    | None -> m
+                m'
+            | Drawing.EndPeek ->
+                let om = OutcropApp.update m.outcropStats (Peeking None)
+                { m with outcropStats = om}
                 
             | _ ->
                 let view = 

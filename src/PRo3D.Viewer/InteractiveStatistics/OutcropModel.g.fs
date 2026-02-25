@@ -1,5 +1,5 @@
-//a95d0374-5e1a-22bf-e77a-03fa62044928
-//40105eac-725a-a8ed-2e7a-8bb531c0f5ce
+//ee6d8025-97ac-8ffd-3aff-cdf94662535c
+//fdd13480-849f-ecb0-e9df-ed00546b4aa8
 #nowarn "49" // upper case patterns
 #nowarn "66" // upcast is unncecessary
 #nowarn "1337" // internal types
@@ -18,6 +18,7 @@ type AdaptiveOutcropModel(value : OutcropModel) =
             m
         FSharp.Data.Traceable.ChangeableModelMap(value.aggregations, (fun (v : InteractiveStatisticsModel) -> AdaptiveInteractiveStatisticsModel(v)), __arg2, (fun (m : AdaptiveInteractiveStatisticsModel) -> m))
     let _activeAggregation_ = FSharp.Data.Adaptive.cval(value.activeAggregation)
+    let _activePeeking_ = FSharp.Data.Adaptive.cval(value.activePeeking)
     let _activeMeasurements_ = FSharp.Data.Adaptive.clist(value.activeMeasurements)
     let _allLeaves_ = FSharp.Data.Adaptive.cmap(value.allLeaves)
     let mutable __value = value
@@ -30,11 +31,13 @@ type AdaptiveOutcropModel(value : OutcropModel) =
             __adaptive.MarkOutdated()
             _aggregations_.Update(value.aggregations)
             _activeAggregation_.Value <- value.activeAggregation
+            _activePeeking_.Value <- value.activePeeking
             _activeMeasurements_.Value <- value.activeMeasurements
             _allLeaves_.Value <- value.allLeaves
     member __.Current = __adaptive
     member __.aggregations = _aggregations_ :> FSharp.Data.Adaptive.amap<System.Guid, AdaptiveInteractiveStatisticsModel>
     member __.activeAggregation = _activeAggregation_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.Option<System.Guid>>
+    member __.activePeeking = _activePeeking_ :> FSharp.Data.Adaptive.aval<Microsoft.FSharp.Core.Option<System.Guid>>
     member __.activeMeasurements = _activeMeasurements_ :> FSharp.Data.Adaptive.alist<Vis_Measurement>
     member __.allLeaves = _allLeaves_ :> FSharp.Data.Adaptive.amap<System.Guid, System.Guid>
 [<AutoOpen; System.Diagnostics.CodeAnalysis.SuppressMessage("NameConventions", "*")>]
@@ -42,6 +45,7 @@ module OutcropModelLenses =
     type OutcropModel with
         static member aggregations_ = ((fun (self : OutcropModel) -> self.aggregations), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, InteractiveStatisticsModel>) (self : OutcropModel) -> { self with aggregations = value }))
         static member activeAggregation_ = ((fun (self : OutcropModel) -> self.activeAggregation), (fun (value : Microsoft.FSharp.Core.Option<System.Guid>) (self : OutcropModel) -> { self with activeAggregation = value }))
+        static member activePeeking_ = ((fun (self : OutcropModel) -> self.activePeeking), (fun (value : Microsoft.FSharp.Core.Option<System.Guid>) (self : OutcropModel) -> { self with activePeeking = value }))
         static member activeMeasurements_ = ((fun (self : OutcropModel) -> self.activeMeasurements), (fun (value : FSharp.Data.Adaptive.IndexList<Vis_Measurement>) (self : OutcropModel) -> { self with activeMeasurements = value }))
         static member allLeaves_ = ((fun (self : OutcropModel) -> self.allLeaves), (fun (value : FSharp.Data.Adaptive.HashMap<System.Guid, System.Guid>) (self : OutcropModel) -> { self with allLeaves = value }))
 

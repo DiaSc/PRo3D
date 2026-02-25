@@ -10,6 +10,7 @@ type Vis_Measurement =
     | LENGTH
     | DIP_AZIMUTH
     | STRIKE_AZIMUTH
+    | DIP_ANGLE
 
 [<ModelType>]
 type StatisticsVisualizationModel =         
@@ -38,6 +39,7 @@ module StatisticsVisualizationModel =
     let getLength = fun (x:AnnotationResults) -> x.length        
     let getDipAzimuth = fun (x:DipAndStrikeResults) -> x.dipAzimuth
     let getStrikeAzimuth = fun (x:DipAndStrikeResults) -> x.strikeAzimuth
+    let getDipAngle = fun (x:DipAndStrikeResults) -> x.dipAngle
 
     let getAnnotationResults
         (annotations: List<Guid*Annotation>)  
@@ -69,11 +71,13 @@ module StatisticsVisualizationModel =
         | LENGTH -> getAnnotationResults annotations getLength         
         | DIP_AZIMUTH -> getDnSResults annotations getDipAzimuth            
         | STRIKE_AZIMUTH -> getDnSResults annotations getStrikeAzimuth
+        | DIP_ANGLE -> getDnSResults annotations getDipAngle
 
     let createVisualization (annotations: List<Guid*Annotation>) (measurement:Vis_Measurement) =
         let data = getVisualizationData annotations measurement
         match measurement with
         | LENGTH -> StatisticsVisualizationModel.Histogram (HistogramModel.initHistogram data)
         | DIP_AZIMUTH -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
-        | STRIKE_AZIMUTH -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)    
+        | STRIKE_AZIMUTH -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)   
+        | DIP_ANGLE -> StatisticsVisualizationModel.RoseDiagram (RoseDiagramModel.initRoseDiagram data)
 

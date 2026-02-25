@@ -67,6 +67,8 @@ type DrawingAction =
 | ExportAsGeoJSON_xyz    of string
 | ContinuouslyGeoJson    of string
 | ExportAsAttitude       of string
+| StartPeek              of Guid
+| EndPeek
 
 [<ModelType>]
 type AutomaticGeoJsonExport = 

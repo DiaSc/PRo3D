@@ -125,6 +125,21 @@ module OutcropApp =
             | false, true -> 
                 //there is neither a destination ISM, nor are the moved annos connected to other ISMs
                 m
+        | Peeking (anno) ->     
+            match anno with
+            | Some a -> 
+                let correspondingISM = m.allLeaves |> HashMap.tryFind a.key
+                match correspondingISM with
+                | Some id -> update m (InteractiveStatisticsMessage (id, StartPeek a))
+                | None -> update m (UpdateAllModels (StartPeek a))
+            | None -> 
+                let m' = 
+                    match m.activePeeking with
+                    | Some ism -> update m (InteractiveStatisticsMessage (ism, EndPeek))
+                    | None -> update m (UpdateAllModels (EndPeek))
+                {m' with activePeeking = None}
+
+       
                        
 
             
@@ -146,7 +161,8 @@ module OutcropApp =
                     div [ clazz "ui menu"] [
                         div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.LENGTH)] [text "Length"]
                         div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.DIP_AZIMUTH)] [text "Dip Azimuth"]
-                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.STRIKE_AZIMUTH)] [text "Strike Azimuth"]                         
+                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.STRIKE_AZIMUTH)] [text "Strike Azimuth"]  
+                        div [clazz "ui inverted item"; onMouseClick (fun _ -> CreateVisualization Vis_Measurement.DIP_ANGLE)] [text "Dip Angle"]
                     ]
                 ]
             )

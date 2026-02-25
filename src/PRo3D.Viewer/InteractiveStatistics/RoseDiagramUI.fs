@@ -152,7 +152,7 @@ module RoseDiagramUI =
                 
                 yield drawCircle center innerRad
                 yield drawCircle center outerRad                 
-                //yield drawText (V2i(30, dimensions.Y-5)) (sprintf "value = %s" r.value) "12" "left"               
+                yield drawText (V2i(30, dimensions.Y-5)) (sprintf "avg = %f" avgAngle) "12" "left"               
                 yield averageLine center innerRad outerRad avgAngle "red"
             }
         Incremental.Svg.svg AttributeMap.empty sect

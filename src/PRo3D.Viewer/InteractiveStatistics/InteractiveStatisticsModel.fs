@@ -15,7 +15,7 @@ type InteractiveStatisticsModel =
         node            :   Node
         path            :   list<Index>
         leaves          :   HashMap<Guid,Annotation>
-        hoveredLeaves   :   Option<list<Guid>>
+        hoveredLeaves   :   Option<list<Guid>>        
         visualisations  :   HashMap<Vis_Measurement,StatisticsVisualizationModel>
     }
 
@@ -23,6 +23,8 @@ type InteractiveStatisticsAction =
     | SetActive
     | AddAnnotation of list<Guid * Annotation> //add one or multiple annotations
     | RemoveAnnotation of Guid
+    | StartPeek of Annotation
+    | EndPeek
     | CreateVisualization of Vis_Measurement
     | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //visualisation settings have changed
 
@@ -46,7 +48,7 @@ module InteractiveStatisticsModel =
         node = initNode
         path = list.Empty
         leaves = HashMap.empty
-        hoveredLeaves = None
+        hoveredLeaves = None        
         visualisations = HashMap.empty
         }
 

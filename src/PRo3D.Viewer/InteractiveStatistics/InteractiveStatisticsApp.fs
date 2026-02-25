@@ -47,6 +47,39 @@ module InteractiveStatisticsApp =
                     model'
                 )
             {m with leaves = leaves'; visualisations = vis'}
+
+        | StartPeek (anno) ->          
+            let vis' = 
+                m.visualisations 
+                |> HashMap.map (fun meas model -> 
+                    let data = StatisticsVisualizationModel.getVisualizationData [(anno.key,anno)] meas |> List.first
+                    match data with
+                    | Some d -> 
+                        let d' = d |> snd
+                        let model' = 
+                            match model with
+                            | Histogram h -> StatisticsVisualization_App.update model (HistogramMessage (PeekBinStart d'))
+                            | RoseDiagram r -> StatisticsVisualization_App.update model (RoseDiagramMessage (PeekRDBinStart d'))
+                        model'
+                    | None -> model
+                    
+                )
+            {m with visualisations = vis'}
+
+        | EndPeek ->
+            let vis' = 
+                m.visualisations 
+                |> HashMap.map (fun meas model ->                     
+                        let model' = 
+                            match model with
+                            | Histogram h -> StatisticsVisualization_App.update model (HistogramMessage (PeekBinEnd))
+                            | RoseDiagram r -> StatisticsVisualization_App.update model (RoseDiagramMessage (PeekRDBinEnd))
+                        model'                   
+                )
+            {m with visualisations = vis'}
+
+
+
         | CreateVisualization (measurement) ->             
             let vis = StatisticsVisualizationModel.createVisualization (m.leaves |> HashMap.toList) measurement
             let visList = m.visualisations |> HashMap.add measurement vis
