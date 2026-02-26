@@ -35,6 +35,7 @@ type HistogramModelAction =
     | ExitBin
     | PeekBinStart of float
     | PeekBinEnd
+    | SetDomain of Range1d              //update the domain range automatically 
 
 module HistogramModel =
 

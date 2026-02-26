@@ -1,6 +1,7 @@
 ﻿namespace PRo3D.Viewer.InteractiveStatistics
 
 open System
+open Aardvark.Base
 open FSharp.Data.Adaptive
 open Adaptify
 open PRo3D.Base.Annotation
@@ -26,7 +27,8 @@ type InteractiveStatisticsAction =
     | StartPeek of Annotation
     | EndPeek
     | CreateVisualization of Vis_Measurement
-    | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //visualisation settings have changed
+    | StatisticsVisualizationMessage of Vis_Measurement * StatisticsVisualizationAction //target a specific visualisation
+    | UpdateAllVisualizations of HashMap<Vis_Measurement,Range1d> //update the domain ranges
 
 module InteractiveStatisticsModel =
 

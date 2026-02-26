@@ -99,7 +99,18 @@ module InteractiveStatisticsApp =
                     | Some id -> StatisticsVisualization_App.getHoveredIDs model id
                     | None -> None
                 | None -> None
-            {m with visualisations = updatedVisualizations; hoveredLeaves = hovering}                
+            {m with visualisations = updatedVisualizations; hoveredLeaves = hovering}  
+        | UpdateAllVisualizations (ranges) ->
+            let visualizations' =
+                m.visualisations
+                |> HashMap.map (fun meas model -> 
+                    let range = ranges |> HashMap.tryFind meas
+                    match range with
+                    | Some r -> StatisticsVisualization_App.update model (SetRange r)
+                    | None -> model
+                )
+            {m with visualisations = visualizations'}           
+
           
        
   

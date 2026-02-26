@@ -1,6 +1,7 @@
 ﻿namespace PRo3D.Viewer.InteractiveStatistics
 
 open System
+open Aardvark.Base
 open FSharp.Data.Adaptive
 open Adaptify
 open PRo3D.Base.Annotation
@@ -15,7 +16,9 @@ type OutcropModel =
         activeAggregation: Option<Guid> //currently used to determine if there is hovering going on in one InteractiveStatisticsModel    
         activePeeking: Option<Guid> //used to determine if there is peeking happening in a specific ISM vs.prediction in all
         activeMeasurements: IndexList<Vis_Measurement>    
-        allLeaves : HashMap<Guid, Guid> //the key Guid is the id of the Annotation, the value Guid is the id of the InteractiveStatisticsModel the Annotation belongs to
+        ranges: HashMap<Vis_Measurement,Range1d> //ranges for histograms
+        allLeaves : HashMap<Guid, Guid> //key Guid = Annotation key; value Guid = id of the InteractiveStatisticsModel the Annotation belongs to
+        flat : HashMap<Guid,Annotation>
     }
 
 type OutcropAction =
@@ -36,6 +39,8 @@ module OutcropModel =
             aggregations = HashMap.empty
             activeAggregation = None     
             activePeeking = None
-            activeMeasurements = IndexList.Empty  
+            activeMeasurements = IndexList.Empty 
+            ranges = HashMap.empty
             allLeaves = HashMap.empty
+            flat = HashMap.empty
         }

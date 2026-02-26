@@ -1,6 +1,7 @@
 ﻿namespace PRo3D.Viewer.InteractiveStatistics
 
 open System
+open Aardvark.Base
 open PRo3D.Base.Annotation
 open PRo3D.Core
 open FSharp.Data.Adaptive
@@ -31,7 +32,8 @@ type StatisticsVisualizationModel =
 
 type StatisticsVisualizationAction =
     | HistogramMessage of HistogramModelAction
-    | RoseDiagramMessage of RoseDiagramModelAction    
+    | RoseDiagramMessage of RoseDiagramModelAction
+    | SetRange of Range1d
 
 
 module StatisticsVisualizationModel =

@@ -11,8 +11,12 @@ module StatisticsVisualization_App =
         match (v,act) with
         | Histogram h, HistogramMessage ha -> 
             StatisticsVisualizationModel.Histogram (HistogramApp.update h ha)
-        | RoseDiagram r, RoseDiagramMessage ra -> 
-            StatisticsVisualizationModel.RoseDiagram (RoseDiagramApp.update r ra)        
+        | RoseDiagram rd, RoseDiagramMessage ra -> 
+            StatisticsVisualizationModel.RoseDiagram (RoseDiagramApp.update rd ra)       
+        | Histogram h, SetRange r ->
+            StatisticsVisualizationModel.Histogram (HistogramApp.update h (SetDomain r))
+        | RoseDiagram rd, SetRange r ->
+            StatisticsVisualizationModel.RoseDiagram rd
         | _ -> 
             failwith "this is not a valid combination of visualization and vis action"
 
