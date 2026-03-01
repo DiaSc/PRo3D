@@ -106,7 +106,6 @@ module HistogramModel =
         )
     
     let setHistogramBins (data:List<Guid*float>) (domain:Range1d) (n:int) = 
-
         let binWidth = domain.Size / float(n)           
         let createBins = createHistogramBins n domain.Min binWidth
         sortHistogramDataIntoBins createBins data domain binWidth

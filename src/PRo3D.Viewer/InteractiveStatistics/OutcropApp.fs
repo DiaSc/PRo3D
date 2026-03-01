@@ -37,7 +37,8 @@ module OutcropApp =
                     if (m.activeMeasurements |> IndexList.exists (fun _ v -> v = meas)) then m else  
                         let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
                         let updatedActives = m.activeMeasurements |> IndexList.add meas
-                        {m with aggregations = updatedAggregations; activeMeasurements = updatedActives}
+                        let m' = {m with aggregations = updatedAggregations; activeMeasurements = updatedActives}
+                        update m' (UpdateAllModels (UpdateAllVisualizations m'.ranges))
             | _ -> let updatedAggregations = m.aggregations |> HashMap.map (fun _ v -> InteractiveStatisticsApp.update v msg)
                    {m with aggregations = updatedAggregations}            
         | InteractiveStatisticsMessage (id,msg) -> 

@@ -219,7 +219,7 @@ module AnnotationStatisticsDrawings =
 
         //name of the node and number of annotations in it
         let firstCell = 
-            let s = AVal.map2 (fun x y -> sprintf "%A | N: %A" x y) m.node.name (m.leaves |> AMap.count)
+            let s = m.node.name |> AVal.map (fun x -> sprintf "%A" x)
             let it = Incremental.text s                        
             [td [] [it]] |> AList.ofList
         

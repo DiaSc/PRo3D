@@ -331,9 +331,12 @@ module HistogramUI =
                         V4i(c.X, y1, c.X, y2)                        
                     )
 
+                let N = bins |> List.fold (fun acc bin -> acc + bin.count) 0
+
                 yield (axis (Range1i(15,15)) (Range1i(marginTop,(divHeight-marginBottom))) "white" "2") //y axis
                 yield (axis (Range1i(15, divWidth)) (Range1i(divHeight-marginBottom, divHeight-marginBottom)) "white" "2")
                 //yield (drawText (V2i(50, divHeight-5)) (sprintf "value = %s" h.value) "12")
+                yield (drawText (V2i(60, divHeight-5)) (sprintf "n = %i | avg = %f" N meanValue) "12")
                 yield! (axisLabels [(0.0, V2i(0,(divHeight-marginBottom))); (float(maxCount), V2i(0, marginTop))] None "start" false) //yAxis Labels
                 yield! (axisLabels xCoords xAxisLabelTransform "middle" true) //xAxis Labels
                 yield! (axisTicks xTickCoords) //xAxis Ticks

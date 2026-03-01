@@ -6,7 +6,7 @@ open Aardvark.UI
 open Aardvark.UI.Primitives
 open FSharp.Data.Adaptive
 
-module RoseDiagramUI =
+module RoseDiagramUI =   
 
     let getHoverColor =
         C4b.VRVisGreen
@@ -46,7 +46,7 @@ module RoseDiagramUI =
         let p = pointFromAngle center binMiddle (outerRad + 10.0)
         V2i(int(p.X), int(p.Y))
 
-    let averageLine (center:V2d) (innerRad:float) (outerRad:float) (avgAngle:float) (color:string)=
+    let averageLine (center:V2d) (innerRad:float) (outerRad:float) (avgAngle:float) (color:string) =
 
         let startPos = pointFromAngle center avgAngle innerRad
         let endPos = pointFromAngle startPos avgAngle (outerRad-innerRad)
@@ -64,7 +64,7 @@ module RoseDiagramUI =
                 yield attribute "y2" (sprintf "%ipx" p2.Y)
             }|> AttributeMap.ofAMap
 
-        Incremental.Svg.line attr
+        Incremental.Svg.line attr     
 
     let drawRoseDiagramSection 
         (startAngle:float) 
@@ -111,6 +111,21 @@ module RoseDiagramUI =
                 let! outerRad = r.outerRad
                 let! avgAngle' = r.avgAngle
                 let avgAngle = ((avgAngle' + 270.0) % 360.0) * Constant.RadiansPerDegree
+                
+                //delete later; debug help   
+                (*
+                let north = 360.0 * Constant.RadiansPerDegree
+                let east = 90.0 * Constant.RadiansPerDegree
+                let south = 180.0 * Constant.RadiansPerDegree
+                let west = 270.0 * Constant.RadiansPerDegree
+                //shifted values
+                let northS = ((360.0 + 270.0) % 360.0) * Constant.RadiansPerDegree
+                let eastS = ((90.0 + 270.0) % 360.0) * Constant.RadiansPerDegree
+                let southS = ((180.0 + 270.0) % 360.0) * Constant.RadiansPerDegree
+                let westS = ((270.0 + 270.0) % 360.0) * Constant.RadiansPerDegree
+                //
+                *)
+                
                 let! peekItem = r.peekItem
                 let peekId, peekValue = peekItem |> Option.defaultValue (-1,0.0)
                 let peekValue' = ((peekValue + 270.0) % 360.0) * Constant.RadiansPerDegree            
@@ -152,9 +167,27 @@ module RoseDiagramUI =
                 
                 yield drawCircle center innerRad
                 yield drawCircle center outerRad                 
-                yield drawText (V2i(30, dimensions.Y-5)) (sprintf "avg = %f" avgAngle) "12" "left"               
+                yield drawText (V2i(30, dimensions.Y-5)) (sprintf "avg = %f" avgAngle') "12" "left"
+                yield drawText (V2i(30, dimensions.Y-15)) (sprintf "n = %i" N) "12" "left"
                 yield averageLine center innerRad outerRad avgAngle "red"
+
+                //direction markings (North, East, South, West)
+                let dir = [("N",360.0); ("E",90.0); ("S",180.0); ("W",270.0)]
+                for i in 0..(dir.Length-1) do
+                    let s,v = dir.Item i
+                    let v' = ((v + 270.0) % 360.0) * Constant.RadiansPerDegree
+                    let p = pointFromAngle center v' (outerRad + 10.0)
+                    yield drawText (V2i(int(p.X), int(p.Y))) s "11" "middle"
+
+                //delete later; debug help
+                (* yield averageLine center innerRad outerRad north "white"
+                yield averageLine center innerRad outerRad east "orange"
+                yield averageLine center innerRad outerRad south "yellow"
+                yield averageLine center innerRad outerRad west "purple"
+                //
+                *)
             }
+        
         Incremental.Svg.svg AttributeMap.empty sect
    
     let binAngleDropDown' (r:AdaptiveRoseDiagramModel) = 

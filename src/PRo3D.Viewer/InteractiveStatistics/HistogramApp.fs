@@ -56,8 +56,8 @@ module HistogramApp =
         | PeekBinEnd ->
             {m with peekItem = None}
         | SetDomain range ->
-            let ud_min = Numeric.update m.domainStart (Numeric.Action.SetValue range.Min)
-            let ud_max = Numeric.update m.domainEnd (Numeric.Action.SetValue range.Max)
+            let ud_min = Numeric.update m.domainStart (Numeric.Action.SetValue (floor(range.Min)))
+            let ud_max = Numeric.update m.domainEnd (Numeric.Action.SetValue (ceil(range.Max)))
             let m' = {m with domainStart = ud_min; domainEnd = ud_max}
             compute m' 
     
